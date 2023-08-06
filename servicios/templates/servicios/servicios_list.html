@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
   <h1 class="my-5">Lista de Servicios</h1>
-  <a href="{% url 'servicio_nuevo' %}" class="btn btn-primary mb-3">Agregar servicio</a>
+  <a href="{% url 'crear_servicio' %}" class="btn btn-primary mb-3">Agregar servicio</a>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -18,9 +18,11 @@
       {% for servicio in servicios %}
       <tr>
         <td>{{ servicio.id }}</td>
-        <td>{{ servicio.nombre }}</td>
-        <td>{{ servicio.descripcion }}</td>
-        <td>{{ servicio.precio }}</td>
+        <td>{{ servicio.cliente }}</td>
+        <td>{{ servicio.tipo_servicio }}</td>
+        <td>{{ servicio.fecha_ejecucion }}</td>
+        <td>{{ servicio.estado_servicio }}</td>
+        
         <td>
           <a href="{% url 'servicio_edit' servicio.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
           <a href="#" class="btn btn-sm btn-danger">Eliminar</a>

@@ -37,4 +37,14 @@
       </div>
     </div>
   </div>
+  <h1>Crear Servicio de Fumigación</h1>
+  <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <h2>Evidencias</h2>
+      {% for formset_form in form.evidencias %}
+          {{ formset_form.as_table }}
+      {% endfor %}
+      <button type="submit">Guardar</button>
+  </form>
 {% endblock %}

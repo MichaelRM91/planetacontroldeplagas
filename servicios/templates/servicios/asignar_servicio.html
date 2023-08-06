@@ -1,0 +1,15 @@
+<!-- asignar_servicio.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asignar Servicio</title>
+</head>
+<body>
+    <h1>Asignar Servicio</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Guardar">
+    </form>
+</body>
+</html>

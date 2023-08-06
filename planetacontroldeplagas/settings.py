@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'servicios',
     'widget_tweaks',
+    'dynamic_formsets',
 
 ]
 
@@ -58,7 +59,7 @@ ROOT_URLCONF = 'planetacontroldeplagas.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'mytemplates')], # Ruta personalizada
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], # Ruta personalizada
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

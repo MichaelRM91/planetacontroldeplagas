@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container">
+    <div class="card mt-4">
+      <h1 class="card-header">
+<!-- crear_servicio.html -->
+    Crear Servicio
+ </h1>
+ <div class="card-body">
+    <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+          <ul>
+            {% for field_errors in form.errors %}
+              {% for error in field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      {% for field in form %}
+      <div class="form-group">
+        {{ field.label_tag }}
+        {{ field|add_class:"form-control" }}
+        </div>
+    {% endfor %}
+        <input type="submit" value="Guardar">
+    </form>
+</div>
+</div>
+</div>
+{% endblock %}    

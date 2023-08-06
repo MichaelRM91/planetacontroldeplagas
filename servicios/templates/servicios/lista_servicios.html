@@ -1,0 +1,17 @@
+<!-- lista_servicios.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Servicios</title>
+</head>
+<body>
+    <h1>Lista de Servicios</h1>
+    <ul>
+        {% for servicio in servicios %}
+            <li>{{ servicio }}</li>
+        {% empty %}
+            <li>No se han creado servicios aún.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

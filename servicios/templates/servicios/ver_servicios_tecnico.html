@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1 class="my-5">Servicios Asignados</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Tipo de Servicio</th>
+        <th>Fecha de Ejecución</th>
+        <th>Estado del Servicio</th>
+        <th>Llenar Formulario</th>
+        <th>Marcar como Completado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asignacion in servicios_asignados %}
+      <tr>
+        <td>{{ asignacion.servicio.cliente.razon_social }}</td>
+        <td>{{ asignacion.servicio.tipo_servicio.nombre }}</td>
+        <td>{{ asignacion.servicio.fecha_ejecucion }}</td>
+        <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
+        
+        <td>
+          <a href="{% url 'llenar_formulario' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Llenar Formulario</a>
+        </td>
+        
+        <td>
+          <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="servicio_id" value="{{ asignacion.servicio.id }}">
+            <input type="submit" class="btn btn-success btn-sm" value="Marcar como Completado">
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6">No se han asignado servicios a este técnico.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
