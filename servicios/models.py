@@ -94,12 +94,16 @@ class TipoControlImplementado(models.Model):
 
 
     
-class ServicioFumigacion(Servicio):
+class ServicioFumigacion(models.Model):
+    servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_fumigacion')
     lugares_tratados = models.ManyToManyField(LugaresATratar, blank=True)
     tipo_control_implementado = models.ManyToManyField(TipoControlImplementado, blank=True)
 
     def __str__(self):
-        return f"Servicio de Fumigación: {self.id}"
+        return f"Servicio de Fumigación: {self.servicio.id}"
+
+    def get_absolute_url(self):
+        return reverse('servicio_fumigacion_detalle', args=[str(self.servicio.id)])
 
 
 
@@ -120,7 +124,7 @@ class ProductoUtilizado(models.Model):
         return f"{self.producto} - {self.cantidad} {self.unidad_medida}"
 
 
-class ServicioLavadoTanque(Servicio):
+class ServicioLavadoTanque(models.Model):
     UBICACION_TANQUE_CHOICES = (
         ('opcion1', 'Opción 1'),
         ('opcion2', 'Opción 2'),
@@ -155,6 +159,7 @@ class ServicioLavadoTanque(Servicio):
     )
 
     # Campos adicionales
+    servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_lavado_tanque')
     ubicacion_tanque = models.CharField(max_length=20, choices=UBICACION_TANQUE_CHOICES)
     otro_ubicacion_tanque = models.CharField(max_length=100, blank=True)
     material_tanque = models.CharField(max_length=20, choices=MATERIAL_TANQUE_CHOICES)

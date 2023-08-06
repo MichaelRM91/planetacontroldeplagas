@@ -5,9 +5,12 @@
   <div class="container">
     <div class="card mt-4">
       <h1 class="card-header">
-        Relizar Servicio
+        Relizar Servicio - {{ form.instance.tipo_servicio.nombre }}
       </h1>
       <div class="card-body">
+        <p>ID del Servicio: {{ form.instance.id }}</p>
+        <p>Nombre del Cliente: {{ form.instance.cliente }}</p>
+        <p>Fecha de Ejecución: {{ form.instance.fecha_ejecucion }}</p>
         <form method="post">
           {% csrf_token %}
           {% if form.errors %}
