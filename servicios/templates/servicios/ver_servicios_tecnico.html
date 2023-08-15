@@ -10,7 +10,7 @@
         <th>Tipo de Servicio</th>
         <th>Fecha de Ejecución</th>
         <th>Estado del Servicio</th>
-        <th>Llenar Formulario</th>
+        <th>Formulario</th>
         <th>Marcar como Completado</th>
       </tr>
     </thead>
@@ -23,14 +23,24 @@
         <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
         
         <td>
-          <a href="{% url 'llenar_formulario' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Llenar Formulario</a>
+          {% if asignacion.servicio.tipo_servicio.nombre == "Fumigacion" %}
+          {% if asignacion.servicio.servicio_fumigacion %}
+              <a href="{% url 'update_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar </a>
+          {% else %}
+              <a href="{% url 'create_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar </a>
+          {% endif %}
+        {% endif %}
+
+          {% if asignacion.servicio.tipo_servicio.nombre == "Lavado de Tanques" %}
+            <a href="{% url 'llenar_formulario' asignacion.servicio.id %}" class="btn btn-success btn-sm">Generar</a>
+          {% endif %}
         </td>
         
         <td>
           <form method="post" style="display: inline;">
             {% csrf_token %}
             <input type="hidden" name="servicio_id" value="{{ asignacion.servicio.id }}">
-            <input type="submit" class="btn btn-success btn-sm" value="Marcar como Completado">
+            <input type="submit" class="btn btn-success btn-sm" value="Completado">
           </form>
         </td>
       </tr>

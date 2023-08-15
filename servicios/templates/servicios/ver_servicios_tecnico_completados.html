@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1 class="my-5">Servicios Finalizados</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Tipo de Servicio</th>
+        <th>Fecha de Ejecución</th>
+        <th>Estado del Servicio</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asignacion in servicios_asignados %}
+      <tr>
+        <td>{{ asignacion.servicio.cliente.razon_social }}</td>
+        <td>{{ asignacion.servicio.tipo_servicio.nombre }}</td>
+        <td>{{ asignacion.servicio.fecha_ejecucion }}</td>
+        <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6">No se han completado servicios.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

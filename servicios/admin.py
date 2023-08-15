@@ -16,6 +16,12 @@ admin.site.register(ServicioLavadoTanque)
 admin.site.register(Servicio)
 admin.site.register(EstadoServicio)
 admin.site.register(Tecnico)
+admin.site.register(ProductoUtilizado)
+admin.site.register(EvidenciaMedida)
+
+
+
+
 
 """ 
 

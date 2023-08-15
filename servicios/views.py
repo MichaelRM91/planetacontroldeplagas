@@ -3,6 +3,13 @@ from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.views.generic.edit import (
+    CreateView, UpdateView
+)
+
+
+
 from .models import (
     AsignacionServicio,
     EstadoServicio,
@@ -14,7 +21,9 @@ from .models import (
 from .forms import (
     AsignacionServicioForm,
     ServicioForm,
+    ServicioFumigacionEvidenciaMedidaFormSet,
     ServicioFumigacionForm,
+    ServicioFumigacionProductoUtilizadoFormSet,
     ServicioLavadoTanqueForm,
 )
 from django.shortcuts import render, get_object_or_404, redirect
@@ -125,7 +134,9 @@ def asignar_servicio(request):
 
 def ver_servicios_tecnico(request):
     tecnico = request.user.tecnico
-    servicios_asignados = AsignacionServicio.objects.filter(tecnico=tecnico)
+    servicios_asignados = AsignacionServicio.objects.filter(
+        Q(tecnico=tecnico) & Q(servicio__estado_servicio__nombre="Asignado")
+        )
 
     if request.method == "POST":
         # Procesar el formulario de marcado como completado
@@ -142,6 +153,15 @@ def ver_servicios_tecnico(request):
         {"servicios_asignados": servicios_asignados},
     )
 
+
+def ver_servicios_completados(request):
+    tecnico = request.user.tecnico
+    servicios_asignados = AsignacionServicio.objects.filter(Q(tecnico=tecnico) & Q(servicio__estado_servicio__nombre = "Completado"))
+    return render(
+        request,
+        "servicios/ver_servicios_tecnico_completados.html",
+        {"servicios_asignados": servicios_asignados},
+    )
 
 def lista_servicios(request):
     servicios = Servicio.objects.all()
@@ -189,7 +209,7 @@ def llenar_formulario(request, servicio_id):
     )
 
     if request.method == "POST":
-        form = form_class(request.POST, instance=servicio)
+        form = form_class(request.POST)
         evidencia_medida_formset = EvidenciaMedidaFormSet(
             request.POST, prefix="evidencias"
         )
@@ -197,23 +217,21 @@ def llenar_formulario(request, servicio_id):
             request.POST, prefix="productos"
         )
 
-        if (
-            form.is_valid()
-            and evidencia_medida_formset.is_valid()
-            and producto_utilizado_formset.is_valid()
-        ):
-            servicio = form.save()
+        if form.is_valid() and evidencia_medida_formset.is_valid() and producto_utilizado_formset.is_valid():
+            servicio_fumigacion = form.save(commit=False)
+            servicio_fumigacion.servicio = servicio
+            servicio_fumigacion.save()
 
             for evidencia_medida_form in evidencia_medida_formset:
                 evidencia_medida = evidencia_medida_form.save(commit=False)
-                evidencia_medida.servicio = servicio
+                evidencia_medida.servicio = servicio_fumigacion
                 evidencia_medida.save()
 
             for producto_utilizado_form in producto_utilizado_formset:
                 producto_utilizado = producto_utilizado_form.save(commit=False)
-                producto_utilizado.servicio = servicio
+                producto_utilizado.servicio = servicio_fumigacion
                 producto_utilizado.save()
-
+                
             return redirect("lista_servicios")
     else:
         form = form_class(instance=servicio)
@@ -230,3 +248,110 @@ def llenar_formulario(request, servicio_id):
             "producto_utilizado_formset": producto_utilizado_formset,
         },
     )
+
+
+
+class FumigacionInline():
+    form_class = ServicioFumigacionForm
+    model = ServicioFumigacion
+    template_name = "servicios/fumigacion_create_or_update.html"
+
+    def form_valid(self, form):
+                # Paso 1: Obtén el objeto del servicio usando el ID proporcionado en la URL
+        servicio_id = self.kwargs.get('servicio_id')
+        servicio = None
+        if servicio_id:
+            servicio = Servicio.objects.get(id=servicio_id)
+        
+        # Paso 2: Asigna el objeto del servicio al campo relevante en el formulario
+        if servicio:
+            form.instance.servicio = servicio
+
+        named_formsets = self.get_named_formsets()
+        if not all((x.is_valid() for x in named_formsets.values())):
+            return self.render_to_response(self.get_context_data(form=form))
+
+        # Save the main object first
+        self.object = form.save()
+
+        # Now that the main object is saved, you can save the related objects
+        for name, formset in named_formsets.items():
+            formset_save_func = getattr(self, 'formset_{0}_valid'.format(name), None)
+            if formset_save_func is not None:
+                formset_save_func(formset)
+            else:
+                formset.save()
+
+        return redirect('ver_servicios_tecnico')
+
+    def formset_envidencias_valid(self, formset):
+        """
+        Hook for custom formset saving.Useful if you have multiple formsets
+        """
+        envidencias = formset.save(commit=False)  # self.save_formset(formset, contact)
+        # add this 2 lines, if you have can_delete=True parameter 
+        # set in inlineformset_factory func
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for EvidenciaMedida in envidencias:
+            EvidenciaMedida.servicio_fumigacion = self.object
+            EvidenciaMedida.save()
+    def formset_productos_valid(self, formset):
+        """
+        Hook for custom formset saving.Useful if you have multiple formsets
+        """
+        productos = formset.save(commit=False)  # self.save_formset(formset, contact)
+        # add this 2 lines, if you have can_delete=True parameter 
+        # set in inlineformset_factory func
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for ProductoUtilizado in productos:
+            ProductoUtilizado.servicio_fumigacion = self.object
+            ProductoUtilizado.save()
+
+class ProductCreate(FumigacionInline, CreateView):
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductCreate, self).get_context_data(**kwargs)
+        ctx['named_formsets'] = self.get_named_formsets()
+        servicio_id = self.kwargs.get('servicio_id')
+        ctx['servicio'] = Servicio.objects.get(id=servicio_id) if servicio_id else None
+
+        return ctx
+ 
+    def get_named_formsets(self):
+        if self.request.method == "GET":
+            return {
+                'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(prefix='envidencias'),
+                'productos': ServicioFumigacionProductoUtilizadoFormSet(prefix='productos'),
+                
+            }
+        else:
+            return {
+                'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, prefix='envidencias'),
+                'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, prefix='productos'),
+            }
+
+
+class ProductUpdate(FumigacionInline, UpdateView):
+    def get_object(self, queryset=None):
+        # Recupera el atributo único de la URL en lugar de usar la pk
+        servicio_id = self.kwargs.get('servicio_id')
+        
+        # Realiza una consulta para obtener el objeto utilizando el atributo único
+        # Asegúrate de importar el modelo correcto y ajustar el nombre del campo
+        return ServicioFumigacion.objects.get(servicio_id=servicio_id)
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductUpdate, self).get_context_data(**kwargs)
+        ctx['named_formsets'] = self.get_named_formsets()
+        servicio_id = self.kwargs.get('servicio_id')
+        ctx['servicio'] = Servicio.objects.get(id=servicio_id) if servicio_id else None
+        return ctx
+
+    def get_named_formsets(self):
+        return {
+            'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='envidencias'),
+            'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='productos'),
+        }
+        
+    

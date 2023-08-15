@@ -66,26 +66,28 @@ ServicioFumigacionEvidenciaMedidaFormSet = inlineformset_factory(
     ServicioFumigacion,
     EvidenciaMedida,
     form=EvidenciaMedidaForm,
-    extra=1,  # Cantidad de formularios vacíos adicionales que se mostrarán
+    extra=1, can_delete=True, can_delete_extra=True  # Cantidad de formularios vacíos adicionales que se mostrarán
 )
 
 ServicioFumigacionProductoUtilizadoFormSet = inlineformset_factory(
     ServicioFumigacion,
     ProductoUtilizado,
     form=ProductoUtilizadoForm,
-    extra=1,
+    extra=1, can_delete=True, can_delete_extra=True
 )
 
 
 class ServicioFumigacionForm(forms.ModelForm):
-       class Meta:
+    class Meta:
         model = ServicioFumigacion
-        fields = ["servicio","lugares_tratados", "tipo_control_implementado"]
+        fields = ["lugares_tratados", "tipo_control_implementado"]
         widgets = {
             'lugares_tratados': forms.CheckboxSelectMultiple(),
             'tipo_control_implementado': forms.CheckboxSelectMultiple(),
-            'servicio': forms.HiddenInput()  # Campo oculto para el servicio
+           # 'servicio': forms.HiddenInput()  # Campo oculto para el servicio
         }
+        
+
 
 
 class ServicioLavadoTanqueForm(forms.ModelForm):

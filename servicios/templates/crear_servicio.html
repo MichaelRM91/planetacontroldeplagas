@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Crear Servicio de Fumigación</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ evidencia_formset.as_table }}
+    {{ producto_formset.as_table }}
+    <button type="submit">Guardar</button>
+  </form>
+{% endblock %}
