@@ -80,12 +80,12 @@ WSGI_APPLICATION = 'planetacontroldeplagas.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'planeta',
-        'USER': 'root',
-        'PASSWORD': '',
+        'ENGINE': 'django.db.backends.postgresql',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': 5432,
+        'NAME': 'planetacontrolplagasdb',
+        'USER': 'postgres',
+        'PASSWORD':'onichan14'
     }
 }
 
