@@ -140,6 +140,19 @@ class UbicacionRev(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+
+class UnidadMedidaTanque(models.Model):
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+    
+class EstadoInternoTanque(models.Model):
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
 class ServicioLavadoTanque(models.Model):
     UBICACION_TANQUE_CHOICES = (
         ('opcion1', 'Opción 1'),

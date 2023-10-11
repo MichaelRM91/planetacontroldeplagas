@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -7,6 +9,8 @@ from django.db.models import Q
 from django.views.generic.edit import (
     CreateView, UpdateView
 )
+from django.views.generic.detail import DetailView
+
 
 
 
@@ -33,12 +37,12 @@ from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
 
 # Create your views here.
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicios_list(request):
     servicios = Servicio.objects.all()
     return render(request, "servicios/servicios_list.html", {"servicios": servicios})
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicio_nuevo(request):
     if request.method == "POST":
         form = ServicioForm(request.POST)
@@ -55,7 +59,7 @@ def servicio_nuevo(request):
         form = ServicioForm()
     return render(request, "servicios/servicio_form.html", {"form": form})
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicio_edit(request, pk):
     servicio = Servicio.objects.get(pk=pk)
     if request.method == "POST":
@@ -72,7 +76,7 @@ def servicio_edit(request, pk):
 
 # servicios/views.py
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def crear_servicio_fumigacion(request):
     if request.method == "POST":
         form = ServicioFumigacionForm(request.POST)
@@ -85,7 +89,7 @@ def crear_servicio_fumigacion(request):
     context = {"form": form}
     return render(request, "servicios/crear_servicio_fumigacion.html", context)
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def crear_servicio_lavado_tanque(request):
     if request.method == "POST":
         form = ServicioFumigacionForm(request.POST)
@@ -117,7 +121,7 @@ def crear_servicio(request):
 
     return render(request, "servicios/crear_servicio.html", {"form": form})
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def asignar_servicio(request):
     if request.method == "POST":
         form = AsignacionServicioForm(request.POST)
@@ -131,7 +135,7 @@ def asignar_servicio(request):
 
     return render(request, "servicios/asignar_servicio.html", {"form": form})
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def ver_servicios_tecnico(request):
     tecnico = request.user.tecnico
     servicios_asignados = AsignacionServicio.objects.filter(
@@ -153,7 +157,7 @@ def ver_servicios_tecnico(request):
         {"servicios_asignados": servicios_asignados},
     )
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def ver_servicios_completados(request):
     tecnico = request.user.tecnico
     servicios_asignados = AsignacionServicio.objects.filter(Q(tecnico=tecnico) & Q(servicio__estado_servicio__nombre = "Completado"))
@@ -163,11 +167,12 @@ def ver_servicios_completados(request):
         {"servicios_asignados": servicios_asignados},
     )
 
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def lista_servicios(request):
     servicios = Servicio.objects.all()
     return render(request, "servicios/lista_servicios.html", {"servicios": servicios})
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def llenar_formulario_fumigacion(request, servicio_id):
     servicio = ServicioFumigacion.objects.get(pk=servicio_id)
     if request.method == "POST":
@@ -179,7 +184,7 @@ def llenar_formulario_fumigacion(request, servicio_id):
         form = ServicioFumigacionForm(instance=servicio)
     return render(request, "servicios/llenar_formulario.html", {"form": form})
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def llenar_formulario_lavado_tanque(request, servicio_id):
     servicio = ServicioLavadoTanque.objects.get(pk=servicio_id)
     if request.method == "POST":
@@ -191,7 +196,7 @@ def llenar_formulario_lavado_tanque(request, servicio_id):
         form = ServicioLavadoTanqueForm(instance=servicio)
     return render(request, "servicios/llenar_formulario.html", {"form": form})
 
-
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def llenar_formulario(request, servicio_id):
     servicio = get_object_or_404(Servicio, pk=servicio_id)
     if servicio.tipo_servicio.nombre == "Fumigacion":
@@ -231,7 +236,7 @@ def llenar_formulario(request, servicio_id):
                 producto_utilizado = producto_utilizado_form.save(commit=False)
                 producto_utilizado.servicio = servicio_fumigacion
                 producto_utilizado.save()
-                
+
             return redirect("lista_servicios")
     else:
         form = form_class(instance=servicio)
@@ -262,7 +267,7 @@ class FumigacionInline():
         servicio = None
         if servicio_id:
             servicio = Servicio.objects.get(id=servicio_id)
-        
+
         # Paso 2: Asigna el objeto del servicio al campo relevante en el formulario
         if servicio:
             form.instance.servicio = servicio
@@ -353,5 +358,49 @@ class ProductUpdate(FumigacionInline, UpdateView):
             'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='envidencias'),
             'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='productos'),
         }
-        
+
+class ProductDetail(DetailView):
+    model = ServicioFumigacion
+
     
+    def get_object(self, queryset=None):
+        # Recupera el atributo único de la URL en lugar de usar la pk
+        servicio_id = self.kwargs.get('servicio_id')
+        
+        # Realiza una consulta para obtener el objeto utilizando el atributo único
+        # Asegúrate de importar el modelo correcto y ajustar el nombre del campo
+        return ServicioFumigacion.objects.get(servicio_id=servicio_id)
+    def get_context_data(self, **kwargs):
+        ctx = super(ProductDetail, self).get_context_data(**kwargs)
+        ctx['named_formsets'] = self.get_named_formsets()
+        servicio_id = self.kwargs.get('servicio_id')
+        ctx['servicio'] = Servicio.objects.get(id=servicio_id) if servicio_id else None
+        return ctx
+
+    def get_named_formsets(self):
+        return {
+            'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='envidencias'),
+            'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='productos'),
+        }
+
+
+def user_login(request):
+    if request.method == 'GET':
+        return render(request, 'login.html', {
+            'form' : AuthenticationForm
+        })
+    else:
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is None:
+            return render(request, 'login.html', {
+                'form': AuthenticationForm,
+                'error': 'nombre de usuario o password incorrectos'
+            })
+        else:
+            login(request, user)
+            return redirect('/')
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('/')

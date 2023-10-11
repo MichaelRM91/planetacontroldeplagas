@@ -10,6 +10,7 @@
         <th>Tipo de Servicio</th>
         <th>Fecha de Ejecución</th>
         <th>Estado del Servicio</th>
+        <th>certificado</th>
       </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
         <td>{{ asignacion.servicio.tipo_servicio.nombre }}</td>
         <td>{{ asignacion.servicio.fecha_ejecucion }}</td>
         <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
+        <td><a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar </a></td>
       </tr>
       {% empty %}
       <tr>
