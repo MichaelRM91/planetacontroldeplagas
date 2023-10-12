@@ -4,7 +4,7 @@ from .Account import views as Accountviews
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.conf import settings  # add this
-
+from django.views.generic.edit import UpdateView
 
 from . import views
 from django.contrib.auth.views import LogoutView
@@ -18,6 +18,7 @@ urlpatterns = [
     path('servicio/editar/<int:pk>/', views.servicio_edit, name='servicio_edit'),
     path('crear_servicio/', views.crear_servicio, name='crear_servicio'),
     path('asignar_servicio/<int:servicio_id>/', views.asignar_servicio, name='asignar_servicio'),
+    path('reasignar_servicio/<int:servicio_id>/', views.reasignar_servicio, name='reasignar_servicio'),
     path('ver_servicios_tecnico/', views.ver_servicios_tecnico, name='ver_servicios_tecnico'),
     path('ver_servicios_completados/', views.ver_servicios_completados, name='ver_servicios_completados'),
     path('lista_servicios/', views.lista_servicios, name='lista_servicios'),

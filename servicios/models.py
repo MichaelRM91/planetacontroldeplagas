@@ -45,7 +45,8 @@ class Servicio(models.Model):
     fecha_ejecucion = models.DateField()
     fecha_vencimiento = models.DateField()
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    estado_servicio = models.ForeignKey(EstadoServicio, on_delete=models.SET_NULL, null=True)
+    # Define el valor predeterminado utilizando la instancia de EstadoServicio
+    estado_servicio = models.ForeignKey(EstadoServicio, on_delete=models.SET_NULL, null=True, default=EstadoServicio.objects.get(nombre="registrado"))
     
     def __str__(self):
         return f"Cliente: {self.cliente}, Tipo de servicio: {self.tipo_servicio}, Fecha de ejecución: {self.fecha_ejecucion}"

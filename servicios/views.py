@@ -123,7 +123,6 @@ def crear_servicio(request):
     return render(request, "servicios/crear_servicio.html", {"form": form})
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
-@login_required  
 def asignar_servicio(request, servicio_id):
     servicio = Servicio.objects.get(id=servicio_id)
 
@@ -131,11 +130,21 @@ def asignar_servicio(request, servicio_id):
         form = AsignacionServicioForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("lista_servicios")
+            return redirect("servicios_list")
     else:
         form = AsignacionServicioForm()
 
-    return render(request, "servicios/asignar_servicio.html", {"form": form})
+    return render(request, "servicios/servicios_list.html", {"form": form})
+
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
+def reasignar_servicio(request, servicio_id):
+    nuevo_estado = get_object_or_404(EstadoServicio, pk=3)
+    servicio = Servicio.objects.get(id=servicio_id)
+    servicio.estado_servicio = nuevo_estado
+    servicio.save()
+    print(servicio.estado_servicio.nombre)
+    return redirect('servicios_list')
+
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def ver_servicios_tecnico(request):
