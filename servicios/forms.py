@@ -48,6 +48,7 @@ class ServicioForm(forms.ModelForm):
     )
     fecha_ejecucion = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
     fecha_vencimiento = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
+    estado_servicio = forms.CharField(initial='registrado', widget=forms.HiddenInput())
 
 
 class EvidenciaMedidaForm(forms.ModelForm):

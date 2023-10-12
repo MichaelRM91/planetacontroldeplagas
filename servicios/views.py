@@ -40,7 +40,8 @@ from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicios_list(request):
     servicios = Servicio.objects.all()
-    return render(request, "servicios/servicios_list.html", {"servicios": servicios})
+    form = AsignacionServicioForm(request.POST)
+    return render(request, "servicios/servicios_list.html", {"servicios": servicios, "form": form})
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicio_nuevo(request):
@@ -122,14 +123,15 @@ def crear_servicio(request):
     return render(request, "servicios/crear_servicio.html", {"form": form})
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
-def asignar_servicio(request):
+@login_required  
+def asignar_servicio(request, servicio_id):
+    servicio = Servicio.objects.get(id=servicio_id)
+
     if request.method == "POST":
         form = AsignacionServicioForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(
-                "lista_servicios"
-            )  # Redirige a la lista de servicios después de asignar uno nuevo
+            return redirect("lista_servicios")
     else:
         form = AsignacionServicioForm()
 

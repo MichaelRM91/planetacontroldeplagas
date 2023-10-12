@@ -11,7 +11,7 @@
         <th>Nombre</th>
         <th>Tipo Servicio</th>
         <th>Fecha Ejecucion</th>
-        <th>Asignacion</th>
+        <th>Creado Por:</th>
         <th>Estado Servicio</th>
         <th>Acciones</th>
       </tr>
@@ -30,7 +30,29 @@
           <a href="{% url 'servicio_edit' servicio.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
           <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
         </td>
+        <td>
+          <button class="btn btn-sm btn-dark btn-ver-detalles" data-toggle="modal" data-target="#confirmModal{{ servicio.id }}" >Asignar</button>
+        </td>
+        
       </tr>
+      <div class="modal fade" id="confirmModal{{ servicio.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmModalLabel">Asignar Servicio</h5>
+              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form method="post" action="{% url 'asignar_servicio' servicio.id %}">
+                {% csrf_token %}
+                <input type="text" readonly name="servicio" value="{{servicio.id}}">
+                {{ form.tecnico.label_tag }}: {{ form.tecnico }}
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
       {% empty %}
       <tr>
         <td colspan="5">No hay servicios registrados.</td>
