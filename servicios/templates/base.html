@@ -22,9 +22,13 @@
           <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
                   <li class="nav-item ml-auto">
+                    {% if user.is_authenticated and not user.tecnico %}
                       <a class="nav-link" href="{% url 'servicios_list' %}">Servicios</a>
-                      <a class="nav-link" href="{% url 'ver_servicios_tecnico' %}">Asignados</a>
-                      <a class="nav-link" href="{% url 'ver_servicios_completados' %}">Completados</a>
+                    {% endif %}
+                      {% if user.is_authenticated and user.tecnico %}
+                        <a class="nav-link" href="{% url 'ver_servicios_tecnico' %}">Asignados</a>
+                        <a class="nav-link" href="{% url 'ver_servicios_completados' %}">Completados</a>
+                      {% endif %}
                       <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           <strong>Hola {{user.first_name}}</strong>
