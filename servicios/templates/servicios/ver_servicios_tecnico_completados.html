@@ -3,7 +3,26 @@
 {% block content %}
 <div class="container">
   <h1 class="my-5">Servicios Finalizados</h1>
-  <table class="table table-striped">
+  {% comment %} ESTILO PARA EL CARD {% endcomment %}
+  <div class="card-container">
+    {% for asignacion in servicios_asignados %}
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Cliente: {{ asignacion.servicio.cliente.razon_social }}</h5>
+          <p class="card-text">Tipo de Servicio: {{ asignacion.servicio.tipo_servicio.nombre }}</p>
+          <p class="card-text">Fecha de Ejecución: {{ asignacion.servicio.fecha_ejecucion }}</p>
+          <p class="card-text">Estado del Servicio: {{ asignacion.servicio.estado_servicio.nombre }}</p>
+          <div class="form-buttons">
+            <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No se han completado servicios.</p>
+    {% endfor %}
+  </div>
+  {% comment %} ESTILO PARA LA TABLA {% endcomment %}
+  <table class="table table-striped table-desktop">
     <thead>
       <tr>
         <th>Cliente</th>
