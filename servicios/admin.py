@@ -1,7 +1,7 @@
 from django.contrib import admin
 from servicios.forms import AsignacionServicioForm, ServicioFumigacionForm
 
-from .models import AsignacionServicio, Cliente, EstadoServicio, Evidencia, EvidenciaMedida, Medida, Producto, Servicio, ServicioFumigacion, ServicioLavadoTanque, Tecnico, TipoServicio, ProductoUtilizado, UnidadMedida, LugaresATratar,TipoControlImplementado
+from .models import *
 
 # Register your models here.
 admin.site.register(TipoServicio)
@@ -18,6 +18,7 @@ admin.site.register(EstadoServicio)
 admin.site.register(Tecnico)
 admin.site.register(ProductoUtilizado)
 admin.site.register(EvidenciaMedida)
+admin.site.register(UbicacionRev)
 
 
 

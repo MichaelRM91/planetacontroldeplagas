@@ -8,20 +8,7 @@ from django.forms import (
 )
 from django.utils import timezone
 
-from .models import (
-    AsignacionServicio,
-    Cliente,
-    Evidencia,
-    EvidenciaMedida,
-    LugaresATratar,
-    ProductoUtilizado,
-    Servicio,
-    ServicioFumigacion,
-    ServicioLavadoTanque,
-    Tecnico,
-    TipoControlImplementado,
-    TipoServicio,
-)
+from .models import *
 
 
 class ServicioForm(forms.ModelForm):

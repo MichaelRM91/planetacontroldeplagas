@@ -27,24 +27,7 @@
           </div>
         </div>
       </div>
-      <div class="modal fade" id="confirmModal{{ servicio.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="confirmModalLabel">Asignar Servicio</h5>
-              <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form method="post" action="{% url 'asignar_servicio' servicio.id %}">
-                {% csrf_token %}
-                <input type="text" readonly name="servicio" value="{{servicio.id}}">
-                {{ form.tecnico.label_tag }}: {{ form.tecnico }}
-                <button type="submit" class="btn btn-primary">Guardar</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     {% empty %}
       <p>No hay servicios registrados.</p>
     {% endfor %}
@@ -60,6 +43,7 @@
           <th>Creado Por</th>
           <th>Estado Servicio</th>
           <th>Asignado a</th>
+          <th>Asignacion</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -72,6 +56,7 @@
           <td>{{ servicio.fecha_ejecucion }}</td>
           <td>{{ servicio.usuario }}</td>
           <td>{{ servicio.estado_servicio }}</td>
+          <td>{{ servicio.asignacionservicio_set.last.tecnico }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}
           <td>
             {% if servicio.estado_servicio.nombre == 'Asignado' %}
               <a class="btn btn-success" href="{% url 'reasignar_servicio' servicio.id %}" role="button">Reasignar</a>
@@ -88,7 +73,7 @@
 
         {% comment %} MODAL PARA ASIGNAR EL SERVICIO {% endcomment %}
         <div class="modal fade" id="confirmModal{{ servicio.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="confirmModalLabel">Asignar Servicio</h5>
@@ -97,8 +82,8 @@
               <div class="modal-body">
                 <form method="post" action="{% url 'asignar_servicio' servicio.id %}">
                   {% csrf_token %}
-                  <input type="text" readonly name="servicio" value="{{servicio.id}}">
-                  {{ form.tecnico.label_tag }}: {{ form.tecnico }}
+                  <input type="text" readonly name="servicio" value="{{servicio.id}}" hidden>
+                    {{ form.tecnico }}
                   <button type="submit" class="btn btn-primary">Guardar</button>
                 </form>
               </div>

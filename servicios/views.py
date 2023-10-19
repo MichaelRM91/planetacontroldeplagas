@@ -14,14 +14,8 @@ from django.views.generic.detail import DetailView
 
 
 
-from .models import (
-    AsignacionServicio,
-    EstadoServicio,
-    ServicioFumigacion,
-    ServicioLavadoTanque,
-    TipoServicio,
-    Servicio,
-)
+from .models import *
+
 from .forms import (
     AsignacionServicioForm,
     ServicioForm,
@@ -29,6 +23,7 @@ from .forms import (
     ServicioFumigacionForm,
     ServicioFumigacionProductoUtilizadoFormSet,
     ServicioLavadoTanqueForm,
+    CertificadoFumigacionForm
 )
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
@@ -39,7 +34,8 @@ from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicios_list(request):
-    servicios = Servicio.objects.all()
+    servicios = Servicio.objects.exclude(estado_servicio=2)
+    print(servicios)
     form = AsignacionServicioForm(request.POST)
     return render(request, "servicios/servicios_list.html", {"servicios": servicios, "form": form})
 
