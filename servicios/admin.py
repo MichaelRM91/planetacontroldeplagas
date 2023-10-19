@@ -19,6 +19,7 @@ admin.site.register(Tecnico)
 admin.site.register(ProductoUtilizado)
 admin.site.register(EvidenciaMedida)
 admin.site.register(UbicacionRev)
+admin.site.register(CategoriaToxicologica)
 
 
 

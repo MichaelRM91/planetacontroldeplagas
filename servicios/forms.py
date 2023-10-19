@@ -39,13 +39,13 @@ class ServicioForm(forms.ModelForm):
 class EvidenciaMedidaForm(forms.ModelForm):
     class Meta:
         model = EvidenciaMedida
-        fields = ["evidencia", "medida"]
+        fields = '__all__'
 
 
 class ProductoUtilizadoForm(forms.ModelForm):
     class Meta:
         model = ProductoUtilizado
-        fields = ["producto", "cantidad", "unidad_medida"]
+        fields = '__all__'
 
 
 ServicioFumigacionEvidenciaMedidaFormSet = inlineformset_factory(

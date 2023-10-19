@@ -74,7 +74,6 @@ class UnidadMedida(models.Model):
     
 class Producto(models.Model):
     nombre = models.CharField(max_length=200)
-    categoria_toxicologica = models.CharField(max_length=100)
 
 
     def __str__(self):
@@ -107,20 +106,33 @@ class ServicioFumigacion(models.Model):
     def get_absolute_url(self):
         return reverse('servicio_fumigacion_detalle', args=[str(self.servicio.id)])
 
+class UbicacionRev(models.Model):
+    nombre = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.nombre
 
 class EvidenciaMedida(models.Model):
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE, related_name='evidencias_medidas')
     evidencia = models.ForeignKey(Evidencia, on_delete=models.CASCADE)
     medida = models.ForeignKey(Medida, on_delete=models.CASCADE)
+    ubicacion = models.ForeignKey(UbicacionRev, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.evidencia} - {self.medida}"
+    
+class CategoriaToxicologica(models.Model):
+    nombre = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.nombre
+    
 class ProductoUtilizado(models.Model):
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE, related_name='productos_utilizados')
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)
     unidad_medida = models.ForeignKey(UnidadMedida, on_delete=models.CASCADE)
+    categoria_toxixologica = models.ForeignKey(CategoriaToxicologica, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return f"{self.producto} - {self.cantidad} {self.unidad_medida}"
@@ -137,11 +149,6 @@ class MaterialTanque(models.Model):
     def __str__(self):
         return self.nombre
     
-class UbicacionRev(models.Model):
-    nombre = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.nombre
     
 
 class UnidadMedidaTanque(models.Model):
