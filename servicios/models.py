@@ -119,7 +119,7 @@ class EvidenciaMedida(models.Model):
     ubicacion = models.ForeignKey(UbicacionRev, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.evidencia} - {self.medida}"
+        return f"{self.evidencia} - {self.medida}- {self.ubicacion}"
     
 class CategoriaToxicologica(models.Model):
     nombre = models.CharField(max_length=200)
