@@ -23,9 +23,12 @@
           <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
                   <li class="nav-item ml-auto">
-                    {% if user.is_authenticated and not user.tecnico %}
-                      <a class="nav-link" href="{% url 'servicios_list' %}">Servicios</a>
-                    {% endif %}
+                      {% if user.is_authenticated and not user.tecnico %}
+                        <a class="nav-link" href="{% url 'servicios_list' %}">Servicios</a>
+                      {% endif %}
+                      {% if user.is_authenticated and user.cliente_set.exists %}
+                        <a class="nav-link" href="{% url 'cliente_servicios'%}">Mis Servicios</a>
+                      {% endif %}
                       {% if user.is_authenticated and user.tecnico %}
                         <a class="nav-link" href="{% url 'ver_servicios_tecnico' %}">Asignados</a>
                         <a class="nav-link" href="{% url 'ver_servicios_completados' %}">Completados</a>
