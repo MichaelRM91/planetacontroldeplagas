@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1 class="my-5">Mis servicios completados</h1>
+  {% comment %} ESTILO PARA EL CARD {% endcomment %}
+  <div class="card-container">
+    {% for servicio in servicios %}
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">ID: {{ servicio.id }}</h5>
+          <p class="card-text">Nombre: {{ servicio.cliente }}</p>
+          <p class="card-text">Tipo de Servicio: {{ servicio.tipo_servicio }}</p>
+          <p class="card-text">Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
+          <p class="card-text">Creado Por: {{ servicio.usuario }}</p>
+          <p class="card-text">Estado Servicio: {{ servicio.estado_servicio }}</p>
+
+          <div class="form-buttons">
+            <a href="{% url 'details_product' servicio.id %}" class="btn btn-sm btn-success me-2">Certificado</a>
+          </div>
+        </div>
+      </div>
+      
+    {% empty %}
+      <p>No hay servicios registrados.</p>
+    {% endfor %}
+  </div>
+  {% comment %} ESTILO PARA LA TABLA {% endcomment %}
+  <table class="table table-striped table-desktop">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Tipo Servicio</th>
+          <th>Fecha Ejecucion</th>
+          <th>Creado Por</th>
+          <th>Estado Servicio</th>
+          <th>Asignado a</th>
+          <th>Asignacion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for servicio in servicios %}
+        <tr>
+          <td>{{ servicio.id }}</td>
+          <td>{{ servicio.cliente }}</td>
+          <td>{{ servicio.tipo_servicio }}</td>
+          <td>{{ servicio.fecha_ejecucion }}</td>
+          <td>{{ servicio.usuario }}</td>
+          <td>{{ servicio.estado_servicio}}</td>
+          <td>{{ servicio.asignacionservicio_set.last.tecnico | default:"Sin asignar" }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}
+          <td>
+            <a href="{% url 'details_product' servicio.id %}" class="btn btn-sm btn-success me-2">Certificado</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No hay servicios registrados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+  
+</div>
+{% endblock %}

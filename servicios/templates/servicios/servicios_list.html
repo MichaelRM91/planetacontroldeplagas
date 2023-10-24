@@ -55,8 +55,8 @@
           <td>{{ servicio.tipo_servicio }}</td>
           <td>{{ servicio.fecha_ejecucion }}</td>
           <td>{{ servicio.usuario }}</td>
-          <td>{{ servicio.estado_servicio }}</td>
-          <td>{{ servicio.asignacionservicio_set.last.tecnico }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}
+          <td>{{ servicio.estado_servicio}}</td>
+          <td>{{ servicio.asignacionservicio_set.last.tecnico | default:"Sin asignar" }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}
           <td>
             {% if servicio.estado_servicio.nombre == 'Asignado' %}
               <a class="btn btn-success" href="{% url 'reasignar_servicio' servicio.id %}" role="button">Reasignar</a>

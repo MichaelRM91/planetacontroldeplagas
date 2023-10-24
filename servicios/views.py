@@ -415,3 +415,13 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('/')
+
+
+@login_required
+def cliente_servicios(request):
+    cliente = Cliente.objects.get(user=request.user)
+    servicios = Servicio.objects.filter(cliente=cliente)
+
+    return render(request, 'servicios/servicios_client.html', {
+        'servicios': servicios
+    })

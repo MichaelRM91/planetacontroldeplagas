@@ -35,6 +35,7 @@ class Cliente(models.Model):
     contacto = models.CharField(max_length=15)
     email = models.EmailField()
     direccion = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.razon_social
