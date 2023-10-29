@@ -46,6 +46,16 @@ class ProductoUtilizadoForm(forms.ModelForm):
     class Meta:
         model = ProductoUtilizado
         fields = '__all__'
+        
+class RecomendacionesForm(forms.ModelForm):
+    class Meta:
+        model = Recomendaciones
+        fields = '__all__'
+        
+class PrecaucionesForm(forms.ModelForm):
+    class Meta:
+        model = Precauciones
+        fields = '__all__'
 
 
 ServicioFumigacionEvidenciaMedidaFormSet = inlineformset_factory(
@@ -66,7 +76,7 @@ ServicioFumigacionProductoUtilizadoFormSet = inlineformset_factory(
 class ServicioFumigacionForm(forms.ModelForm):
     class Meta:
         model = ServicioFumigacion
-        fields = ["lugares_tratados", "tipo_control_implementado"]
+        fields = ["lugares_tratados", "tipo_control_implementado", "precauciones", "recomendaciones"]
         widgets = {
             'lugares_tratados': forms.CheckboxSelectMultiple(),
             'tipo_control_implementado': forms.CheckboxSelectMultiple(),
@@ -80,25 +90,7 @@ class ServicioLavadoTanqueForm(forms.ModelForm):
   
     class Meta:
         model = ServicioLavadoTanque
-        fields = [
-            "ubicacion_tanque",
-            "otro_ubicacion_tanque",
-            "material_tanque",
-            "otro_material_tanque",
-            "revestimiento_tanque",
-            "volumen_almacenamiento",
-            "unidad_medida",
-            "estado_interno_tanque",
-            "fotos_estado_interno",
-            "hermeticidad_tanque",
-            "fotos_hermeticidad",
-            "estado_empaques",
-            "fotos_estado_empaques",
-            "estado_tuberias",
-            "fotos_estado_tuberias",
-            "observaciones_antes",
-            "observaciones_despues",
-        ]
+        fields = '__all__'
         widgets = {
             'servicio': forms.HiddenInput()  # Campo oculto para el servicio
         }

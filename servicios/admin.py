@@ -20,6 +20,9 @@ admin.site.register(ProductoUtilizado)
 admin.site.register(EvidenciaMedida)
 admin.site.register(UbicacionRev)
 admin.site.register(CategoriaToxicologica)
+admin.site.register(Precauciones)
+admin.site.register(Recomendaciones)
+
 
 
 
@@ -35,7 +38,16 @@ class ProductoUtilizadoInline(admin.TabularInline):
     extra = 1 """
 class ServicioFumigacionAdmin(admin.ModelAdmin):
     form = ServicioFumigacionForm
-    filter_horizontal = ('lugares_tratados','tipo_control_implementado')
+
+    fieldsets = (
+        (None, {
+            'fields': ('precauciones', 'recomendaciones')
+        }),
+        ('Selección', {
+            'fields': ('lugares_tratados', 'tipo_control_implementado'),
+            'classes': ('wide',),
+        }),
+    )
 
 admin.site.register(ServicioFumigacion, ServicioFumigacionAdmin)
 

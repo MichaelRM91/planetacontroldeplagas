@@ -10,9 +10,10 @@ from django.views.generic.edit import (
     CreateView, UpdateView
 )
 from django.views.generic.detail import DetailView
-
-
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+from .models import Servicio, ServicioFumigacion, ServicioLavadoTanque
+from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
 
 from .models import *
 
@@ -24,10 +25,6 @@ from .forms import (
     ServicioFumigacionProductoUtilizadoFormSet,
     ServicioLavadoTanqueForm,
 )
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from .models import Servicio, ServicioFumigacion, ServicioLavadoTanque
-from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
 
 # Create your views here.
 

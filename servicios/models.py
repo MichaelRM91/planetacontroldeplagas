@@ -93,13 +93,27 @@ class TipoControlImplementado(models.Model):
 
     def __str__(self):
         return self.nombre
+    
 
+class Recomendaciones(models.Model):
+    descripcion = models.TextField(max_length=200)
+
+    def __str__(self):
+        return self.descripcion
+    
+class Precauciones(models.Model):
+    descripcion = models.TextField(max_length=200)
+
+    def __str__(self):
+        return self.descripcion
 
     
 class ServicioFumigacion(models.Model):
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_fumigacion')
     lugares_tratados = models.ManyToManyField(LugaresATratar, blank=True)
     tipo_control_implementado = models.ManyToManyField(TipoControlImplementado, blank=True)
+    recomendaciones = models.ForeignKey(Recomendaciones, on_delete=models.CASCADE, null=True)
+    precauciones = models.ForeignKey(Precauciones, on_delete=models.CASCADE, null=True, related_name='precauciones_servicio')
 
     def __str__(self):
         return f"Servicio de Fumigación: {self.servicio.id}"
