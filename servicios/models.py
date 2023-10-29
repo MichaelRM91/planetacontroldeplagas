@@ -48,7 +48,7 @@ class Servicio(models.Model):
     fecha_vencimiento = models.DateField()
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     # Define el valor predeterminado utilizando la instancia de EstadoServicio
-    estado_servicio = models.ForeignKey(EstadoServicio, on_delete=models.SET_NULL, null=True, default=EstadoServicio.objects.get(nombre="registrado"))
+    estado_servicio = models.ForeignKey(EstadoServicio, on_delete=models.SET_NULL, null=True)
     
     def __str__(self):
         return f"Cliente: {self.cliente}, Tipo de servicio: {self.tipo_servicio}, Fecha de ejecución: {self.fecha_ejecucion}"
@@ -94,32 +94,44 @@ class TipoControlImplementado(models.Model):
     def __str__(self):
         return self.nombre
     
-
-class Recomendaciones(models.Model):
-    descripcion = models.TextField(max_length=200)
-
-    def __str__(self):
-        return self.descripcion
-    
-class Precauciones(models.Model):
-    descripcion = models.TextField(max_length=200)
-
-    def __str__(self):
-        return self.descripcion
-
     
 class ServicioFumigacion(models.Model):
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_fumigacion')
     lugares_tratados = models.ManyToManyField(LugaresATratar, blank=True)
     tipo_control_implementado = models.ManyToManyField(TipoControlImplementado, blank=True)
-    recomendaciones = models.ForeignKey(Recomendaciones, on_delete=models.CASCADE, null=True)
-    precauciones = models.ForeignKey(Precauciones, on_delete=models.CASCADE, null=True, related_name='precauciones_servicio')
+    
 
     def __str__(self):
         return f"Servicio de Fumigación: {self.servicio.id}"
 
     def get_absolute_url(self):
         return reverse('servicio_fumigacion_detalle', args=[str(self.servicio.id)])
+    
+
+class Precauciones(models.Model):
+    descripcion = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.descripcion
+    
+class Recomendaciones(models.Model):
+    descripcion = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.descripcion
+    
+class ServicioRecomendacion(models.Model):
+    servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE)
+    recomendacion = models.ForeignKey(Recomendaciones, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.recomendacion
+
+class ServicioPrecaucion(models.Model):
+    servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE)
+    precaucion = models.ForeignKey(Precauciones, on_delete=models.CASCADE)
+
+    
 
 class UbicacionRev(models.Model):
     nombre = models.CharField(max_length=200)

@@ -49,13 +49,27 @@ class ProductoUtilizadoForm(forms.ModelForm):
         
 class RecomendacionesForm(forms.ModelForm):
     class Meta:
-        model = Recomendaciones
+        model = ServicioRecomendacion
         fields = '__all__'
         
 class PrecaucionesForm(forms.ModelForm):
     class Meta:
         model = Precauciones
         fields = '__all__'
+    
+ServicioFumigacionRecomendacionesFormSet = inlineformset_factory(
+    ServicioFumigacion,
+    ServicioRecomendacion, 
+    form=RecomendacionesForm,
+    extra=1
+    )
+
+ServicioFumigacionPrecaucionesFormSet = inlineformset_factory(
+    ServicioFumigacion, 
+    ServicioPrecaucion, 
+    form=PrecaucionesForm, 
+    extra=1
+    )
 
 
 ServicioFumigacionEvidenciaMedidaFormSet = inlineformset_factory(
@@ -76,7 +90,7 @@ ServicioFumigacionProductoUtilizadoFormSet = inlineformset_factory(
 class ServicioFumigacionForm(forms.ModelForm):
     class Meta:
         model = ServicioFumigacion
-        fields = ["lugares_tratados", "tipo_control_implementado", "precauciones", "recomendaciones"]
+        fields = ["lugares_tratados", "tipo_control_implementado"]
         widgets = {
             'lugares_tratados': forms.CheckboxSelectMultiple(),
             'tipo_control_implementado': forms.CheckboxSelectMultiple(),

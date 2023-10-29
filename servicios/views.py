@@ -24,6 +24,8 @@ from .forms import (
     ServicioFumigacionForm,
     ServicioFumigacionProductoUtilizadoFormSet,
     ServicioLavadoTanqueForm,
+    ServicioFumigacionRecomendacionesFormSet,
+    ServicioFumigacionPrecaucionesFormSet
 )
 
 # Create your views here.
@@ -265,7 +267,7 @@ class FumigacionInline():
     template_name = "servicios/fumigacion_create_or_update.html"
 
     def form_valid(self, form):
-                # Paso 1: Obtén el objeto del servicio usando el ID proporcionado en la URL
+        # Paso 1: Obtén el objeto del servicio usando el ID proporcionado en la URL
         servicio_id = self.kwargs.get('servicio_id')
         servicio = None
         if servicio_id:
@@ -316,6 +318,19 @@ class FumigacionInline():
         for ProductoUtilizado in productos:
             ProductoUtilizado.servicio_fumigacion = self.object
             ProductoUtilizado.save()
+            
+    def formset_precauciones_valid(self, formset):
+        """
+        Hook for custom formset saving.Useful if you have multiple formsets
+        """
+        precaucion = formset.save(commit=False)  # self.save_formset(formset, contact)
+        # add this 2 lines, if you have can_delete=True parameter 
+        # set in inlineformset_factory func
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for precauciones in precaucion:
+            precauciones.servicio_fumigacion = self.object
+            precauciones.save()
 
 class ProductCreate(FumigacionInline, CreateView):
 
@@ -332,12 +347,16 @@ class ProductCreate(FumigacionInline, CreateView):
             return {
                 'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(prefix='envidencias'),
                 'productos': ServicioFumigacionProductoUtilizadoFormSet(prefix='productos'),
+                'precauciones': ServicioFumigacionPrecaucionesFormSet(prefix='precauciones'),
+                'recomendaciones': ServicioFumigacionRecomendacionesFormSet(prefix='recomendaciones'),
                 
             }
         else:
             return {
                 'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, prefix='envidencias'),
                 'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, prefix='productos'),
+                'precauciones': ServicioFumigacionPrecaucionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='precauciones'),
+                'recomendaciones': ServicioFumigacionRecomendacionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='recomendaciones'),
             }
 
 
@@ -360,6 +379,8 @@ class ProductUpdate(FumigacionInline, UpdateView):
         return {
             'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='envidencias'),
             'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='productos'),
+            'precauciones': ServicioFumigacionPrecaucionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='precauciones'),
+            'recomendaciones': ServicioFumigacionRecomendacionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='recomendaciones'),
         }
 
 class ProductDetail(DetailView):
