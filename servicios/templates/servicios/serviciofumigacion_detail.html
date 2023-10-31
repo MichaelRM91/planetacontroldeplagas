@@ -1,31 +1,60 @@
 <!-- product_create_or_update.html -->
 
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <div class="container p-4" method="post" id="product_form">
     {% csrf_token %}
     <table class="card-header table table-bordered" border="0" cellpadding="0" cellspacing="0" id="sheet0" class="gridlines">
       <tbody>
-        <tr class="table-secondary">
-          <td colspan="8">EMPRESA PRIVADA CERTIFICADA Y VIGILADA POR LA SECRETARIA DE
-            SALUD DEPARTAMENTAL RADICADO N°201941450200077491 FECHA: 12-04-2019 TRD 4145.020.14.12.187.007749</td>
+        <tr>
+          <td colspan="2" style="text-align:center;">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" width="50%">
+          </td>
+          <td colspan="2" style="text-align:center;">
+            NIT.900939670-0<br>
+            Cra 41 B n° 43-75 B/ Antonio Nariño<br>
+            Telefono: 3386559 cel: 315 533 35 02 - 314 616 56 31
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="3" style="text-align:center;">
+            <b>
+              EMPRESA PRIVADA CERTIFICADA Y VIGILADA POR LA SECRETARIA DE SALUD<br>
+              DEPARTAMENTAL RADICADO N°201941450200077491 FECHA: 12-04-2019 TRD<br>
+              4145.020.14.12.187.007749<br>
+            </b>
+          </td>
+          <td  colspan="1" style="text-align:center;">
+            <b>
+              CERTIFICADO<br>
+              DE CONTROL<br>
+              N° {{ servicio.id}}
+            </b>
+          </td>
+        </tr>
+        {% comment %} INFORMACION DEL CLIENTE {% endcomment %}
+        <tr>
+          <td colspan="3"><strong>RAZON SOCIAL:</strong> {{ servicio.cliente.razon_social}}</td>
+          <td colspan="1"><strong>CONTACTO:</strong> {{ servicio.cliente.contacto}}</td>
         </tr>
         <tr>
-          {% comment %} INFORMACION DEL CLIENTE {% endcomment %}
-          <td colspan="2"><strong>ID del Servicio:</strong> {{ servicio.id }}</td>
-          <td colspan="2"><strong>Nombre del Cliente:</strong> {{ servicio.cliente }}</td>
+          <td colspan="1"><strong>NIT</strong></td>
+          <td colspan="1">{{ servicio.cliente.nit}}</td>
+          <td colspan="1"><strong>DIRECCION:</strong><br> {{ servicio.cliente.direccion}}</td>
+          <td colspan="1"><strong>TELEFONO:</strong> {{ servicio.cliente.telefono}}</td>
         </tr>
         {% comment %} FECHA DE EJECUCION {% endcomment %}
         <tr>
-          <td  colspan="1"><strong>FECHA EJECUCION</strong>: </td>
-          <td  colspan="1">{{ servicio.fecha_ejecucion }}</td>
-          <td  colspan="1"><strong>FECHA VENCIMIENTO</strong>: </td>
-          <td  colspan="1">{{ servicio.fecha_vencimiento }}</td>
+          <td  colspan="1"><br><strong>FECHA EJECUCION</strong> </td>
+          <td  colspan="1"><br>{{ servicio.fecha_ejecucion }}</td>
+          <td  colspan="1"><br><strong>FECHA VENCIMIENTO</strong> </td>
+          <td  colspan="1"><br>{{ servicio.fecha_vencimiento }}</td>
         </tr>
         <tr >
-          <td  colspan="2"><br><strong>PRECAUCIONES</strong></td>
-          <td  colspan="2"><br><strong>RECOMENDACIONES</strong></td>
+          <td  colspan="2" style="text-align:center;"><br><strong>PRECAUCIONES</strong></td>
+          <td  colspan="2" style="text-align:center;"><br><strong>RECOMENDACIONES</strong></td>
         </tr>
         <tr>
           
@@ -44,9 +73,9 @@
         <tr/>
         
         <tr>
-          <td  colspan="2"><br><strong>EVIDENCIAS</strong> </td>
+          <td  colspan="2" style="text-align:center;"><br><strong>EVIDENCIAS</strong> </td>
 
-          <td  colspan="2"><br><strong>PRODUCTOS UTILIZADOS</strong></td>
+          <td  colspan="2" style="text-align:center;"><br><strong>PRODUCTOS UTILIZADOS</strong></td>
         </tr>
         <tr>
           {% comment %} LISTA DE EVIDENCIAS {% endcomment %}
@@ -85,13 +114,32 @@
               {% endfor %}
             {% endfor %}
         </tr>
+        <tr>
+          <td colspan="1"><br><strong>INGENIERO AGRONOMO </strong></td>
+          <td colspan="1"><br>Miguel Meneses Alvarez</td>
+          <td colspan="1"><br><strong>TECNICO APLICADOR </strong></td>
+
+        </tr>
+        <tr> 
+          <td colspan="1"><br><strong>OBSERVACIONES</strong></td>
+          <td  colspan="2"><br>
+            {% for servicio in servicio_fumigacion_list %}
+              {{servicio.observaciones}}
+            {% endfor %}
+          </td>
+          <td colspan="1"><br><strong>FIRMA</strong></td>
+        </tr>
+        <tr style="text-align:center;">
+          <td colspan="6">
+            <b>
+              AGRADECEMOS SU CONFIANZA <br>
+              ESTAMOS 100% COMRPROMETIDOS CON LA PRESERVACION DEL MEDIO AMBIENTE<br>
+              contacto@planetacontrolplagas.com / www.planetacontrolplagas.com<br>
+            </b>
+          </td>
+        </tr>
+
       </tbody>
     </table>
-
-    {% for servicio in servicio_fumigacion_list %}
-      <p>Observaciones: {{servicio.observaciones}}</p>
-    {% endfor %}
-
-    <p>Tecnico: {{tecnico}}</p>
     
 {% endblock content %}
