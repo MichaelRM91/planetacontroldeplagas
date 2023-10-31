@@ -331,6 +331,19 @@ class FumigacionInline():
         for precauciones in precaucion:
             precauciones.servicio_fumigacion = self.object
             precauciones.save()
+            
+    def formset_recomendaciones_valid(self, formset):
+        """
+        Hook for custom formset saving.Useful if you have multiple formsets
+        """
+        recomendacion = formset.save(commit=False)  # self.save_formset(formset, contact)
+        # add this 2 lines, if you have can_delete=True parameter 
+        # set in inlineformset_factory func
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for recomendaciones in recomendacion:
+            recomendaciones.servicio_fumigacion = self.object
+            recomendaciones.save()
 
 class ProductCreate(FumigacionInline, CreateView):
 
@@ -379,8 +392,8 @@ class ProductUpdate(FumigacionInline, UpdateView):
         return {
             'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='envidencias'),
             'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='productos'),
-            'precauciones': ServicioFumigacionPrecaucionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='precauciones'),
-            'recomendaciones': ServicioFumigacionRecomendacionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='recomendaciones'),
+            'precauciones': ServicioFumigacionPrecaucionesFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='precauciones'),
+            'recomendaciones': ServicioFumigacionRecomendacionesFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='recomendaciones'),
         }
 
 class ProductDetail(DetailView):
@@ -403,6 +416,8 @@ class ProductDetail(DetailView):
         servicioFumigacion = ServicioFumigacion.objects.filter(servicio=servicio_id).first() if servicio_id else None
         ctx['evidencia_medida'] = EvidenciaMedida.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
         ctx['productos_utilizados'] = ProductoUtilizado.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
+        ctx['precauciones'] = ServicioPrecaucion.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
+        ctx['recomendaciones'] = ServicioRecomendacion.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
 
         return ctx
 
@@ -410,6 +425,8 @@ class ProductDetail(DetailView):
         return {
             'envidencias': ServicioFumigacionEvidenciaMedidaFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='envidencias'),
             'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='productos'),
+            'precauciones': ServicioFumigacionPrecaucionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='precauciones'),
+            'recomendaciones': ServicioFumigacionRecomendacionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='recomendaciones'),
         }
 
 

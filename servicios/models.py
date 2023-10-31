@@ -48,7 +48,7 @@ class Servicio(models.Model):
     fecha_vencimiento = models.DateField()
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     # Define el valor predeterminado utilizando la instancia de EstadoServicio
-    estado_servicio = models.ForeignKey(EstadoServicio, on_delete=models.SET_NULL, null=True)
+    estado_servicio = models.ForeignKey(EstadoServicio, on_delete=models.SET_NULL, null=True, default=3)
     
     def __str__(self):
         return f"Cliente: {self.cliente}, Tipo de servicio: {self.tipo_servicio}, Fecha de ejecución: {self.fecha_ejecucion}"
@@ -125,13 +125,15 @@ class ServicioRecomendacion(models.Model):
     recomendacion = models.ForeignKey(Recomendaciones, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.recomendacion
+        return f"Servicio: {self.servicio_fumigacion}, Precauciones: {self.recomendacion}"
+
 
 class ServicioPrecaucion(models.Model):
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE)
     precaucion = models.ForeignKey(Precauciones, on_delete=models.CASCADE)
 
-    
+    def __str__(self):
+        return f"Servicio: {self.servicio_fumigacion}, Precauciones: {self.precaucion}"
 
 class UbicacionRev(models.Model):
     nombre = models.CharField(max_length=200)

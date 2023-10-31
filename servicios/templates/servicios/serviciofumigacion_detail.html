@@ -3,50 +3,88 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form enctype="multipart/form-data" class="container" method="post" id="product_form">
+<div class="container p-4" method="post" id="product_form">
     {% csrf_token %}
-
-    
-    <div class="card">
-        <div class="card-header card-header-secondary">
-            <h4 class="card-title"> EMPRESA PRIVADA CERTIFICADA Y VIGILADA POR LA SECRETARIA DE
-                SALUD DEPARTAMENTAL RADICADO N°201941450200077491 FECHA: 12-04-2019 TRD 4145.020.14.12.187.007749</h4>
-        </div> 
-        <div class="form-group card-body">
-        <p>ID del Servicio: {{ servicio.id }}</p>
-        <p>Nombre del Cliente: {{ servicio.cliente }}</p>
-        <p>Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
-        <p>Lugares tratados: 
-          {% for servicio_fumigacion in servicio_fumigacion_list %}
-            <ul>
-              {% for lugar in servicio_fumigacion.lugares_tratados.all %}
-                  <li>{{ lugar.nombre }}</li>
-              {% endfor %}
-            </ul>
-          {% endfor %}
-        </p>
-        <p>{{servicio.serviciofumigacion}}</p>
-        <p>Tipo de control implementado:
-          {% for servicio_fumigacion in servicio_fumigacion_list %}
-          <ul>
-            {% for control in servicio_fumigacion.tipo_control_implementado.all %}
-                <li>{{ control.nombre }}</li>
+    <table class="card-header table table-bordered" border="0" cellpadding="0" cellspacing="0" id="sheet0" class="gridlines">
+      <tbody>
+        <tr class="table-secondary">
+          <td colspan="8">EMPRESA PRIVADA CERTIFICADA Y VIGILADA POR LA SECRETARIA DE
+            SALUD DEPARTAMENTAL RADICADO N°201941450200077491 FECHA: 12-04-2019 TRD 4145.020.14.12.187.007749</td>
+        </tr>
+        <tr>
+          {% comment %} INFORMACION DEL CLIENTE {% endcomment %}
+          <td colspan="2"><strong>ID del Servicio:</strong> {{ servicio.id }}</td>
+          <td colspan="2"><strong>Nombre del Cliente:</strong> {{ servicio.cliente }}</td>
+        </tr>
+        {% comment %} FECHA DE EJECUCION {% endcomment %}
+        <tr>
+          <td  colspan="1"><strong>FECHA EJECUCION</strong>: </td>
+          <td  colspan="1">{{ servicio.fecha_ejecucion }}</td>
+          <td  colspan="1"><strong>FECHA VENCIMIENTO</strong>: </td>
+          <td  colspan="1">{{ servicio.fecha_vencimiento }}</td>
+        </tr>
+        <tr >
+          <td  colspan="2"><br><strong>PRECAUCIONES</strong></td>
+          <td  colspan="2"><br><strong>RECOMENDACIONES</strong></td>
+        </tr>
+        <tr>
+          
+          {% comment %} LISTA DE PRECAUCIONES {% endcomment %}
+          <td  colspan="2">
+            {% for precaucion in precauciones %}
+            '◡' {{precaucion.precaucion}}<br> <hr>
             {% endfor %}
-          </ul>
-        {% endfor %}
-        </p>
-        <p>Evidencias:
-          {% for evidencia in evidencia_medida %}
-          <li>{{evidencia}}</li>
-        {% endfor %}
-        </p>
+          </td>
+          {% comment %} LISTA DE RECOMENDACIONES {% endcomment %}
+          <td  colspan="2">
+            {% for recomendacion in recomendaciones %}
+            '◡' {{recomendacion.recomendacion}}<br> <hr>
+            {% endfor %}
+          </td>
+        <tr/>
+        
+        <tr>
+          <td  colspan="2"><br><strong>EVIDENCIAS</strong> </td>
 
-        <p>Productos Utilizados:
-          {% for productos in productos_utilizados %}
-          <li>{{productos}}</li>
-        {% endfor %}
-        </p>
-        
-    </div> 
-        
+          <td  colspan="2"><br><strong>PRODUCTOS UTILIZADOS</strong></td>
+        </tr>
+        <tr>
+          {% comment %} LISTA DE EVIDENCIAS {% endcomment %}
+          <td colspan="2">
+            {% for evidencia in evidencia_medida %}
+              {{ evidencia}}<br><hr>
+            {% endfor %}
+            <br>
+          </td>
+          {% comment %} LISTA DE PRODUCTOS UTILIZADOS {% endcomment %}
+          <td  colspan="2">
+            {% for productos in productos_utilizados %}
+             {{productos}}<br><hr>
+            {% endfor %}
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td  colspan="1"><strong>LUGARES TRATADOS</strong></td>
+          
+            {% for servicio_fumigacion in servicio_fumigacion_list %}
+              {% for lugar in servicio_fumigacion.lugares_tratados.all %}
+              <td  colspan="1"><br>{{ lugar.nombre }}</td>
+              {% if forloop.counter|divisibleby:3 %}</tr><tr><td colspan="1">{% endif %}
+              {% endfor %}
+            {% endfor %}
+          
+        </tr>
+        <tr >
+          <td colspan="1"><strong>TIPO DE APLICACION:</strong></td>
+          
+            {% for servicio_fumigacion in servicio_fumigacion_list %}
+              {% for control in servicio_fumigacion.tipo_control_implementado.all %}
+              <td  colspan="1"><br> {{ control.nombre }}</td>
+              {% if forloop.counter|divisibleby:3 %}</tr><tr><td colspan="1">{% endif %}
+              {% endfor %}
+            {% endfor %}
+        </tr>
+      </tbody>
+    </table>
 {% endblock content %}

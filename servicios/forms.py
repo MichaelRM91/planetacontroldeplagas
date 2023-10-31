@@ -54,7 +54,7 @@ class RecomendacionesForm(forms.ModelForm):
         
 class PrecaucionesForm(forms.ModelForm):
     class Meta:
-        model = Precauciones
+        model = ServicioPrecaucion
         fields = '__all__'
     
 ServicioFumigacionRecomendacionesFormSet = inlineformset_factory(
