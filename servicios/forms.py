@@ -56,6 +56,7 @@ class PrecaucionesForm(forms.ModelForm):
     class Meta:
         model = ServicioPrecaucion
         fields = '__all__'
+        
     
 ServicioFumigacionRecomendacionesFormSet = inlineformset_factory(
     ServicioFumigacion,
@@ -90,7 +91,7 @@ ServicioFumigacionProductoUtilizadoFormSet = inlineformset_factory(
 class ServicioFumigacionForm(forms.ModelForm):
     class Meta:
         model = ServicioFumigacion
-        fields = ["lugares_tratados", "tipo_control_implementado"]
+        fields = ["lugares_tratados", "tipo_control_implementado", "observaciones"]
         widgets = {
             'lugares_tratados': forms.CheckboxSelectMultiple(),
             'tipo_control_implementado': forms.CheckboxSelectMultiple(),

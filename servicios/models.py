@@ -99,6 +99,7 @@ class ServicioFumigacion(models.Model):
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_fumigacion')
     lugares_tratados = models.ManyToManyField(LugaresATratar, blank=True)
     tipo_control_implementado = models.ManyToManyField(TipoControlImplementado, blank=True)
+    observaciones = models.TextField(max_length=500, null=True)
     
 
     def __str__(self):

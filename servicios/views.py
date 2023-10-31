@@ -418,7 +418,10 @@ class ProductDetail(DetailView):
         ctx['productos_utilizados'] = ProductoUtilizado.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
         ctx['precauciones'] = ServicioPrecaucion.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
         ctx['recomendaciones'] = ServicioRecomendacion.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
-
+        asignacion = AsignacionServicio.objects.get(servicio_id=servicio_id)
+        tecnico_asignado = asignacion.tecnico
+        ctx['tecnico'] = tecnico_asignado
+        
         return ctx
 
     def get_named_formsets(self):

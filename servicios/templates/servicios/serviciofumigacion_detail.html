@@ -87,4 +87,11 @@
         </tr>
       </tbody>
     </table>
+
+    {% for servicio in servicio_fumigacion_list %}
+      <p>Observaciones: {{servicio.observaciones}}</p>
+    {% endfor %}
+
+    <p>Tecnico: {{tecnico}}</p>
+    
 {% endblock content %}
