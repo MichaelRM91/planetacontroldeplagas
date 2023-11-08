@@ -179,8 +179,6 @@ class MaterialTanque(models.Model):
     def __str__(self):
         return self.nombre
     
-    
-
 class UnidadMedidaTanque(models.Model):
     nombre = models.CharField(max_length=200)
 
@@ -192,66 +190,65 @@ class EstadoInternoTanque(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+class RevestimientoTanque(models.Model):
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+    
+class EstadoTuberias(models.Model):
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+    
+class EstadoEmpaques(models.Model):
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+    
+class HermeticidadTanque(models.Model):
+    nombre = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+
+class Imagen(models.Model):
+    imagen = models.ImageField(upload_to='media/anexoImagenes/')
+    descripcion = models.TextField()
+
+    def __str__(self):
+        return self.descripcion
+
+class AnexoLavadoTanque(models.Model):
+    titulo = models.CharField(max_length=100)
+    imagenes = models.ManyToManyField(Imagen)
+    # Otros campos que puedas necesitar en tu modelo de Anexos
+
+    def __str__(self):
+        return self.titulo
 class ServicioLavadoTanque(models.Model):
-    UBICACION_TANQUE_CHOICES = (
-        ('opcion1', 'Opción 1'),
-        ('opcion2', 'Opción 2'),
-        ('otro', 'Otro'),
-    )
-
-    MATERIAL_TANQUE_CHOICES = (
-        ('opcion1', 'Opción 1'),
-        ('opcion2', 'Opción 2'),
-        ('otro', 'Otro'),
-    )
-
-    UBICACION_REV_CHOICES = (
-        ('opcion1', 'Opción 1'),
-        ('opcion2', 'Opción 2'),
-        ('otro', 'Otro'),
-    )
-
-    UNIDAD_MEDIDA_CHOICES = (
-        ('mt3', 'm³'),
-        ('lt', 'L'),
-    )
-
-    ESTADO_INTERNO_CHOICES = (
-        ('opcion1', 'Opción 1'),
-        ('opcion2', 'Opción 2'),
-    )
-
-    FOTOS_CHOICES = (
-        ('opcion1', 'Opción 1'),
-        ('opcion2', 'Opción 2'),
-    )
-
-    # Campos adicionales
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_lavado_tanque')
-    ubicacion_tanque = models.CharField(max_length=20, choices=UBICACION_TANQUE_CHOICES)
-    otro_ubicacion_tanque = models.CharField(max_length=100, blank=True)
-    material_tanque = models.CharField(max_length=20, choices=MATERIAL_TANQUE_CHOICES)
-    otro_material_tanque = models.CharField(max_length=100, blank=True)
-    revestimiento_tanque = models.CharField(max_length=100)
+    ubicacion_tanque = models.ForeignKey(UbicacionTanque, on_delete=models.CASCADE, null=True)
+    material_tanque = models.ForeignKey(MaterialTanque, on_delete=models.CASCADE, null=True)
+    unidad_medida = models.ForeignKey(UnidadMedidaTanque, on_delete=models.CASCADE, null=True)
+    revestimiento_tanque = models.ForeignKey(RevestimientoTanque, on_delete=models.CASCADE, null=True)
+    estado_interno_tanque = models.ForeignKey(EstadoInternoTanque, on_delete=models.CASCADE, null=True)
     volumen_almacenamiento = models.FloatField()
-    unidad_medida = models.CharField(max_length=3, choices=UNIDAD_MEDIDA_CHOICES)
-    estado_interno_tanque = models.CharField(max_length=20, choices=ESTADO_INTERNO_CHOICES)
-    fotos_estado_interno = models.ImageField(upload_to='fotos_estado_interno')
-    hermeticidad_tanque = models.CharField(max_length=20, choices=FOTOS_CHOICES)
-    fotos_hermeticidad = models.ImageField(upload_to='fotos_hermeticidad')
-    estado_empaques = models.CharField(max_length=20, choices=FOTOS_CHOICES)
-    fotos_estado_empaques = models.ImageField(upload_to='fotos_estado_empaques')
-    estado_tuberias = models.CharField(max_length=20, choices=FOTOS_CHOICES)
-    fotos_estado_tuberias = models.ImageField(upload_to='fotos_estado_tuberias')
-    observaciones_antes = models.ImageField(upload_to='observaciones_antes')
-    observaciones_despues = models.ImageField(upload_to='observaciones_despues')
-
-    def save(self, *args, **kwargs):
-        if self.ubicacion_tanque != 'otro':
-            self.otro_ubicacion_tanque = ''
-        if self.material_tanque != 'otro':
-            self.otro_material_tanque = ''
-        super().save(*args, **kwargs)
+    estado_tuberias = models.ForeignKey(EstadoTuberias, on_delete=models.CASCADE)
+    estado_empaque = models.ForeignKey(EstadoEmpaques, on_delete=models.CASCADE, null=True)
+    hermeticidad_tanque = models.ForeignKey(HermeticidadTanque, on_delete=models.CASCADE)
+    observaciones = models.TextField(max_length=500, null=True)
+    anexo = models.ForeignKey(AnexoLavadoTanque, on_delete=models.CASCADE, null=True)
+    
+    #campos otros
+    otra_ubicacion_tanque = models.CharField(max_length=50, null=True, blank=True)
+    otro_material_tanque = models.CharField(max_length=50, null=True, blank=True)
+    
+    def __str__(self):
+        return f"Servicio de Lavado Tanque: {self.servicio.id}"
 
 class Tecnico(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

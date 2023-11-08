@@ -32,7 +32,7 @@ from .forms import (
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicios_list(request):
-    servicios = Servicio.objects.exclude(estado_servicio=2)
+    servicios = Servicio.objects.exclude(estado_servicio=2).order_by('-id')
     print(servicios)
     form = AsignacionServicioForm(request.POST)
     return render(request, "servicios/servicios_list.html", {"servicios": servicios, "form": form})
@@ -144,8 +144,9 @@ def reasignar_servicio(request, servicio_id):
 def ver_servicios_tecnico(request):
     tecnico = request.user.tecnico
     servicios_asignados = AsignacionServicio.objects.filter(
-        Q(tecnico=tecnico) & Q(servicio__estado_servicio__nombre="Asignado")
-        )
+    Q(tecnico=tecnico) & Q(servicio__estado_servicio__nombre="Asignado")
+).order_by('-id')
+
 
     if request.method == "POST":
         # Procesar el formulario de marcado como completado
@@ -200,65 +201,6 @@ def llenar_formulario_lavado_tanque(request, servicio_id):
     else:
         form = ServicioLavadoTanqueForm(instance=servicio)
     return render(request, "servicios/llenar_formulario.html", {"form": form})
-
-@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
-def llenar_formulario(request, servicio_id):
-    servicio = get_object_or_404(Servicio, pk=servicio_id)
-    if servicio.tipo_servicio.nombre == "Fumigacion":
-        form_class = ServicioFumigacionForm
-    elif servicio.tipo_servicio.nombre == "Lavado de Tanques":
-        form_class = ServicioLavadoTanqueForm
-    else:
-        return HttpResponse("Tipo de servicio desconocido")
-
-    EvidenciaMedidaFormSet = formset_factory(
-        EvidenciaMedidaForm, extra=1, can_delete=True
-    )
-    ProductoUtilizadoFormSet = formset_factory(
-        ProductoUtilizadoForm, extra=1, can_delete=True
-    )
-
-    if request.method == "POST":
-        form = form_class(request.POST)
-        evidencia_medida_formset = EvidenciaMedidaFormSet(
-            request.POST, prefix="evidencias"
-        )
-        producto_utilizado_formset = ProductoUtilizadoFormSet(
-            request.POST, prefix="productos"
-        )
-
-        if form.is_valid() and evidencia_medida_formset.is_valid() and producto_utilizado_formset.is_valid():
-            servicio_fumigacion = form.save(commit=False)
-            servicio_fumigacion.servicio = servicio
-            servicio_fumigacion.save()
-
-            for evidencia_medida_form in evidencia_medida_formset:
-                evidencia_medida = evidencia_medida_form.save(commit=False)
-                evidencia_medida.servicio = servicio_fumigacion
-                evidencia_medida.save()
-
-            for producto_utilizado_form in producto_utilizado_formset:
-                producto_utilizado = producto_utilizado_form.save(commit=False)
-                producto_utilizado.servicio = servicio_fumigacion
-                producto_utilizado.save()
-
-            return redirect("lista_servicios")
-    else:
-        form = form_class(instance=servicio)
-
-        evidencia_medida_formset = EvidenciaMedidaFormSet(prefix="evidencias")
-        producto_utilizado_formset = ProductoUtilizadoFormSet(prefix="productos")
-
-    return render(
-        request,
-        "servicios/llenar_formulario.html",
-        {
-            "form": form,
-            "evidencia_medida_formset": evidencia_medida_formset,
-            "producto_utilizado_formset": producto_utilizado_formset,
-        },
-    )
-
 
 
 class FumigacionInline():
@@ -458,7 +400,7 @@ def user_logout(request):
 @login_required
 def cliente_servicios(request):
     cliente = Cliente.objects.get(user=request.user)
-    servicios = Servicio.objects.filter(cliente=cliente)
+    servicios = Servicio.objects.filter(cliente=cliente, estado_servicio=2).order_by('-id')
 
     return render(request, 'servicios/servicios_client.html', {
         'servicios': servicios

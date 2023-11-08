@@ -24,6 +24,17 @@ admin.site.register(Precauciones)
 admin.site.register(Recomendaciones)
 admin.site.register(ServicioRecomendacion)
 admin.site.register(ServicioPrecaucion)
+admin.site.register(RevestimientoTanque)
+admin.site.register(EstadoTuberias)
+admin.site.register(EstadoEmpaques)
+admin.site.register(HermeticidadTanque)
+admin.site.register(Imagen)
+admin.site.register(AnexoLavadoTanque)
+admin.site.register(UbicacionTanque)
+admin.site.register(MaterialTanque)
+admin.site.register(UnidadMedidaTanque)
+admin.site.register(EstadoInternoTanque)
+
 
 
 

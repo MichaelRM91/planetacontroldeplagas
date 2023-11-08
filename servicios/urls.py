@@ -22,7 +22,7 @@ urlpatterns = [
     path('ver_servicios_tecnico/', views.ver_servicios_tecnico, name='ver_servicios_tecnico'),
     path('ver_servicios_completados/', views.ver_servicios_completados, name='ver_servicios_completados'),
     path('lista_servicios/', views.lista_servicios, name='lista_servicios'),
-    path('llenar_formulario/<int:servicio_id>/', views.llenar_formulario, name='llenar_formulario'),
+    
     path('create/<int:servicio_id>/', ProductCreate.as_view(), name='create_product'),
     path('update/<int:servicio_id>/', ProductUpdate.as_view(), name='update_product'),
     path('details/<int:servicio_id>/', ProductDetail.as_view(), name='details_product'),
