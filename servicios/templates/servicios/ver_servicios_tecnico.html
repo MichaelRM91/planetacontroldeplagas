@@ -23,7 +23,7 @@
             {% endif %}
 
             {% if asignacion.servicio.tipo_servicio.nombre == "Lavado de Tanques" %}
-              <a href="{% url 'llenar_formulario' asignacion.servicio.id %}" class="btn btn-success btn-sm">Generar</a>
+              <a href="{% url 'create_lavado' asignacion.servicio.id %}" class="btn btn-success btn-sm">Generar</a>
             {% endif %}
             <form method="post" style="display: inline;">
               {% csrf_token %}
@@ -67,7 +67,7 @@
             {% endif %}
 
             {% if asignacion.servicio.tipo_servicio.nombre == "Lavado de Tanques" %}
-              <a href="{% url 'llenar_formulario' asignacion.servicio.id %}" class="btn btn-success btn-sm">Generar</a>
+              <a href="{% url 'create_lavado' asignacion.servicio.id %}" class="btn btn-success btn-sm">Generar</a>
             {% endif %}
           </td>
 

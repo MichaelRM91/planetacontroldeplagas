@@ -1,5 +1,5 @@
 from django.contrib import admin
-from servicios.forms import AsignacionServicioForm, ServicioFumigacionForm
+from servicios.forms import *
 
 from .models import *
 
@@ -35,19 +35,6 @@ admin.site.register(MaterialTanque)
 admin.site.register(UnidadMedidaTanque)
 admin.site.register(EstadoInternoTanque)
 
-
-
-
-
-
-""" 
-
-class EvidenciaMedidaInline(admin.TabularInline):
-    model = EvidenciaMedida
-    extra = 1
-class ProductoUtilizadoInline(admin.TabularInline):
-    model = ProductoUtilizado
-    extra = 1 """
 class ServicioFumigacionAdmin(admin.ModelAdmin):
     form = ServicioFumigacionForm
     filter_horizontal = ('lugares_tratados','tipo_control_implementado')
@@ -58,8 +45,4 @@ class AsignacionServicioAdmin(admin.ModelAdmin):
     form = AsignacionServicioForm
 
 admin.site.register(AsignacionServicio, AsignacionServicioAdmin)
-
-
-
-
 

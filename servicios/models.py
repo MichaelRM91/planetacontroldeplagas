@@ -222,17 +222,10 @@ class Imagen(models.Model):
     def __str__(self):
         return self.descripcion
 
-class AnexoLavadoTanque(models.Model):
-    titulo = models.CharField(max_length=100)
-    imagenes = models.ManyToManyField(Imagen)
-    # Otros campos que puedas necesitar en tu modelo de Anexos
-
-    def __str__(self):
-        return self.titulo
 class ServicioLavadoTanque(models.Model):
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_lavado_tanque')
-    ubicacion_tanque = models.ForeignKey(UbicacionTanque, on_delete=models.CASCADE, null=True)
-    material_tanque = models.ForeignKey(MaterialTanque, on_delete=models.CASCADE, null=True)
+    ubicacion_tanque = models.ForeignKey(UbicacionTanque, on_delete=models.CASCADE, null=True, blank=True)
+    material_tanque = models.ForeignKey(MaterialTanque, on_delete=models.CASCADE, null=True, blank=True)
     unidad_medida = models.ForeignKey(UnidadMedidaTanque, on_delete=models.CASCADE, null=True)
     revestimiento_tanque = models.ForeignKey(RevestimientoTanque, on_delete=models.CASCADE, null=True)
     estado_interno_tanque = models.ForeignKey(EstadoInternoTanque, on_delete=models.CASCADE, null=True)
@@ -240,8 +233,7 @@ class ServicioLavadoTanque(models.Model):
     estado_tuberias = models.ForeignKey(EstadoTuberias, on_delete=models.CASCADE)
     estado_empaque = models.ForeignKey(EstadoEmpaques, on_delete=models.CASCADE, null=True)
     hermeticidad_tanque = models.ForeignKey(HermeticidadTanque, on_delete=models.CASCADE)
-    observaciones = models.TextField(max_length=500, null=True)
-    anexo = models.ForeignKey(AnexoLavadoTanque, on_delete=models.CASCADE, null=True)
+    observaciones = models.TextField(max_length=500, null=True, blank=True)
     
     #campos otros
     otra_ubicacion_tanque = models.CharField(max_length=50, null=True, blank=True)
@@ -249,6 +241,15 @@ class ServicioLavadoTanque(models.Model):
     
     def __str__(self):
         return f"Servicio de Lavado Tanque: {self.servicio.id}"
+
+class AnexoLavadoTanque(models.Model):
+    servicio_Lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE, default=20)
+    titulo = models.CharField(max_length=100)
+    imagenes = models.ManyToManyField(Imagen)
+    # Otros campos que puedas necesitar en tu modelo de Anexos
+
+    def __str__(self):
+        return self.titulo
 
 class Tecnico(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

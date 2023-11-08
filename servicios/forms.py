@@ -56,6 +56,11 @@ class PrecaucionesForm(forms.ModelForm):
     class Meta:
         model = ServicioPrecaucion
         fields = '__all__'
+
+class AnexosForm(forms.ModelForm):
+    class Meta:
+        model = AnexoLavadoTanque
+        fields = '__all__'
         
     
 ServicioFumigacionRecomendacionesFormSet = inlineformset_factory(
@@ -87,6 +92,13 @@ ServicioFumigacionProductoUtilizadoFormSet = inlineformset_factory(
     extra=1, can_delete=True, can_delete_extra=True
 )
 
+ServicioLavadoTanqueAnexosFormset = inlineformset_factory(
+    ServicioLavadoTanque,
+    AnexoLavadoTanque,
+    form=AnexosForm,
+    extra=1, can_delete=True, can_delete_extra=True
+)
+
 
 class ServicioFumigacionForm(forms.ModelForm):
     class Meta:
@@ -105,7 +117,7 @@ class ServicioLavadoTanqueForm(forms.ModelForm):
   
     class Meta:
         model = ServicioLavadoTanque
-        fields = '__all__'
+        fields = ["ubicacion_tanque", "material_tanque", "unidad_medida", "revestimiento_tanque", "estado_interno_tanque", "volumen_almacenamiento", "estado_tuberias", "estado_empaque", "hermeticidad_tanque", "observaciones", "otra_ubicacion_tanque", "otro_material_tanque"]
         widgets = {
             'servicio': forms.HiddenInput()  # Campo oculto para el servicio
         }

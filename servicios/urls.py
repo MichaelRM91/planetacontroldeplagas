@@ -8,9 +8,7 @@ from django.views.generic.edit import UpdateView
 
 from . import views
 from django.contrib.auth.views import LogoutView
-from .views import (
-    ProductCreate, ProductDetail, ProductUpdate, 
-)
+from .views import *
 
 urlpatterns = [
     path('', views.servicios_list, name='servicios_list'),
@@ -22,6 +20,7 @@ urlpatterns = [
     path('ver_servicios_tecnico/', views.ver_servicios_tecnico, name='ver_servicios_tecnico'),
     path('ver_servicios_completados/', views.ver_servicios_completados, name='ver_servicios_completados'),
     path('lista_servicios/', views.lista_servicios, name='lista_servicios'),
+    path('create_lavado/<int:servicio_id>/', LavadoCreate.as_view(), name='create_lavado'),
     
     path('create/<int:servicio_id>/', ProductCreate.as_view(), name='create_product'),
     path('update/<int:servicio_id>/', ProductUpdate.as_view(), name='update_product'),
