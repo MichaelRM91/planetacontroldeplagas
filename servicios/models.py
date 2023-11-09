@@ -215,12 +215,7 @@ class HermeticidadTanque(models.Model):
     def __str__(self):
         return self.nombre
 
-class Imagen(models.Model):
-    imagen = models.ImageField(upload_to='media/anexoImagenes/')
-    descripcion = models.TextField()
 
-    def __str__(self):
-        return self.descripcion
 
 class ServicioLavadoTanque(models.Model):
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_lavado_tanque')
@@ -241,15 +236,14 @@ class ServicioLavadoTanque(models.Model):
     
     def __str__(self):
         return f"Servicio de Lavado Tanque: {self.servicio.id}"
-
-class AnexoLavadoTanque(models.Model):
+    
+class AnexoImagen(models.Model):
     servicio_Lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE, default=20)
-    titulo = models.CharField(max_length=100)
-    imagenes = models.ManyToManyField(Imagen)
-    # Otros campos que puedas necesitar en tu modelo de Anexos
+    imagen = models.ImageField(upload_to='media/anexoImagenes/')
+    descripcion = models.TextField()
 
     def __str__(self):
-        return self.titulo
+        return self.descripcion
 
 class Tecnico(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

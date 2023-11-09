@@ -21,7 +21,7 @@ urlpatterns = [
     path('ver_servicios_completados/', views.ver_servicios_completados, name='ver_servicios_completados'),
     path('lista_servicios/', views.lista_servicios, name='lista_servicios'),
     path('create_lavado/<int:servicio_id>/', LavadoCreate.as_view(), name='create_lavado'),
-    
+    path('update_lavado/<int:servicio_id>/', LavadoUpdate.as_view(), name='update_lavado'),
     path('create/<int:servicio_id>/', ProductCreate.as_view(), name='create_product'),
     path('update/<int:servicio_id>/', ProductUpdate.as_view(), name='update_product'),
     path('details/<int:servicio_id>/', ProductDetail.as_view(), name='details_product'),

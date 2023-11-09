@@ -59,7 +59,7 @@ class PrecaucionesForm(forms.ModelForm):
 
 class AnexosForm(forms.ModelForm):
     class Meta:
-        model = AnexoLavadoTanque
+        model = AnexoImagen
         fields = '__all__'
         
     
@@ -94,7 +94,7 @@ ServicioFumigacionProductoUtilizadoFormSet = inlineformset_factory(
 
 ServicioLavadoTanqueAnexosFormset = inlineformset_factory(
     ServicioLavadoTanque,
-    AnexoLavadoTanque,
+    AnexoImagen,
     form=AnexosForm,
     extra=1, can_delete=True, can_delete_extra=True
 )
