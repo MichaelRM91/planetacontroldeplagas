@@ -120,9 +120,9 @@
           <td colspan="1"><br><strong>TECNICO APLICADOR </strong></td>
 
         </tr>
-        <tr> 
+        <tr>
           <td colspan="1"><br><strong>OBSERVACIONES</strong></td>
-          <td  colspan="2"><br>
+          <td colspan="2"><br>
             {% for servicio in servicio_fumigacion_list %}
               {{servicio.observaciones}}
             {% endfor %}
@@ -131,14 +131,40 @@
         </tr>
         <tr style="text-align:center;">
           <td colspan="6">
+            <form id="firmaForm" enctype="multipart/form-data">
+              <!-- Añade un estilo margin-right al input para moverlo a la derecha -->
+              <input type="file" id="firmaInput" accept="image/*" onchange="previewFirma()" style="margin-left: 700px;">
+              <img id="firmaPreview" style="max-width: 100px; max-height: 100px;">
+            </form>
+          </td>
+        </tr>
+        <tr style="text-align:center;">
+          <td colspan="6">
             <b>
               AGRADECEMOS SU CONFIANZA <br>
-              ESTAMOS 100% COMRPROMETIDOS CON LA PRESERVACION DEL MEDIO AMBIENTE<br>
+              ESTAMOS 100% COMPROMETIDOS CON LA PRESERVACIÓN DEL MEDIO AMBIENTE<br>
               contacto@planetacontrolplagas.com / www.planetacontrolplagas.com<br>
             </b>
           </td>
         </tr>
-
+        
+        <script>
+          function previewFirma() {
+            var input = document.getElementById('firmaInput');
+            var preview = document.getElementById('firmaPreview');
+        
+            if (input.files && input.files[0]) {
+              var reader = new FileReader();
+        
+              reader.onload = function (e) {
+                preview.src = e.target.result;
+              };
+        
+              reader.readAsDataURL(input.files[0]);
+            }
+          }
+        </script>
+        
       </tbody>
     </table>
     
