@@ -1,0 +1,82 @@
+<!-- product_create_or_update.html -->
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container p-4" method="post" id="product_form">
+    {% csrf_token %}
+    <table class="card-header table table-bordered" border="0" cellpadding="0" cellspacing="0" id="sheet0" class="gridlines">
+      <tbody>
+        <tr>
+          <td colspan="2" style="text-align:center;">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" width="50%">
+          </td>
+          <td colspan="2" style="text-align:center;">
+            NIT.900939670-0<br>
+            Cra 41 B n° 43-75 B/ Antonio Nariño<br>
+            Telefono: 3386559 cel: 315 533 35 02 - 314 616 56 31
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="3" style="text-align:center;">
+            <b>
+              EMPRESA PRIVADA CERTIFICADA Y VIGILADA POR LA SECRETARIA DE SALUD<br>
+              DEPARTAMENTAL RADICADO N°201941450200077491 FECHA: 12-04-2019 TRD<br>
+              4145.020.14.12.187.007749<br>
+            </b>
+          </td>
+          <td  colspan="1" style="text-align:center;">
+            <b>
+              CERTIFICADO<br>
+              DE CONTROL<br>
+              N° {{ servicio.id}}
+            </b>
+          </td>
+        </tr>
+        {% comment %} INFORMACION DEL CLIENTE {% endcomment %}
+        <tr>
+          <td colspan="3"><strong>RAZON SOCIAL:</strong> {{ servicio.cliente.razon_social}}</td>
+          <td colspan="1"><strong>CONTACTO:</strong> {{ servicio.cliente.contacto}}</td>
+        </tr>
+        <tr>
+          <td colspan="1"><strong>NIT</strong></td>
+          <td colspan="1">{{ servicio.cliente.nit}}</td>
+          <td colspan="1"><strong>DIRECCION:</strong><br> {{ servicio.cliente.direccion}}</td>
+          <td colspan="1"><strong>TELEFONO:</strong> {{ servicio.cliente.telefono}}</td>
+        </tr>
+        {% comment %} FECHA DE EJECUCION {% endcomment %}
+        <tr>
+          <td  colspan="1"><br><strong>FECHA EJECUCION</strong> </td>
+          <td  colspan="1"><br>{{ servicio.fecha_ejecucion }}</td>
+          <td  colspan="1"><br><strong>FECHA VENCIMIENTO</strong> </td>
+          <td  colspan="1"><br>{{ servicio.fecha_vencimiento }}</td>
+        </tr>
+        <tr>  
+    </table>
+
+    {% for lavado in servicio_lavado_list %}
+    
+      <p> {{lavado.servicio}} <p/>
+      <p> {{lavado.ubicacion_tanque}} <p/>
+      <p> {{lavado.material_tanque}} <p/>
+      <p> {{lavado.unidad_medida}} <p/>
+      <p> {{lavado.revestimiento_tanque}} <p/>
+      <p> {{lavado.estado_interno_tanque}} <p/>
+      <p> {{lavado.volumen_almacenamiento}} <p/>
+      <p> {{lavado.estado_tuberias}} <p/>
+      <p> {{lavado.estado_empaque}} <p/>
+      <p> {{lavado.hermeticidad_tanque}} <p/>
+      <p> {{lavado.observaciones}} <p/>
+    {% endfor %}
+
+    {% for anexo in anexos %}
+        
+      <p> imagen: <p/>
+      <img src="{{ anexo.imagen.url }}" alt="Imagen del anexo">
+      <p> descripcion: <p/>
+      <p> {{anexo.descripcion}} <p/>
+    {% endfor %}
+    
+    
+{% endblock content %}

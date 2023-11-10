@@ -469,13 +469,25 @@ class LavadoDetail(DetailView):
         return ServicioLavadoTanque.objects.get(servicio_id=servicio_id)
     def get_context_data(self, **kwargs):
         ctx = super(LavadoDetail, self).get_context_data(**kwargs)
-        ctx['named_formsets'] = self.get_named_formsets()
         servicio_id = self.kwargs.get('servicio_id')
         ctx['servicio'] = Servicio.objects.get(id=servicio_id) if servicio_id else None
         ctx['servicio_lavado_list'] = ServicioLavadoTanque.objects.filter(servicio=servicio_id) if servicio_id else None
         asignacion = AsignacionServicio.objects.get(servicio_id=servicio_id)
+        servicio_lavado = ServicioLavadoTanque.objects.get(servicio=servicio_id)
+        ctx['anexos'] = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado) if servicio_id else None
         tecnico_asignado = asignacion.tecnico
         ctx['tecnico'] = tecnico_asignado
+        anexo = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado)
+        print(servicio_id)
+        print(asignacion)
+        print(anexo)
+        
+        
+        # Primero, obtén el objeto ServicioLavadoTanque deseado (puedes reemplazar 'id_del_servicio' con el ID real):
+        servicio_lavado_tanque = ServicioLavadoTanque.objects.get(servicio=servicio_id)
+
+        # Luego, puedes obtener los anexos asociados a este servicio:
+        anexos_del_servicio = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado_tanque)
         
         return ctx
 

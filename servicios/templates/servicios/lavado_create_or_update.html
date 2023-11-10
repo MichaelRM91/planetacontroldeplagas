@@ -75,13 +75,21 @@
                     <tr id="anexos-{{ forloop.counter0 }}" class="hide_all">
                         {{ formss.id }}
                         {% for field in formss.visible_fields %}
-                            <td>
-                                {{ field}}
-                                {% for error in field.errors %}
-                                    <span style="color: red">{{ error }}</span>
-                                {% endfor %}
-                            </td>
-                        {% endfor %}
+                <td>
+                    {% if field.name == 'imagen' %}
+                        {% if field.value %}
+                            <img src="{{ field.value.url }}" width="80%">
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <span style="color: red">{{ error }}</span>
+                    {% endfor %}
+                </td>
+            {% endfor %}
                         <!-- Código para eliminar -->
                         {% if formss.instance.pk %}
                             <td>
