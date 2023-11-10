@@ -13,8 +13,14 @@
           <p class="card-text">Fecha de Ejecución: {{ asignacion.servicio.fecha_ejecucion }}</p>
           <p class="card-text">Estado del Servicio: {{ asignacion.servicio.estado_servicio.nombre }}</p>
           <div class="form-buttons">
-            <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
-          </div>
+            {% if asignacion.servicio.tipo_servicio.nombre == 'Fumigacion' %}
+                <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-danger btn-sm">Actualizar para Fumigación</a>
+            {% elif asignacion.servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
+                <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-info btn-sm">Actualizar para Lavado</a>
+            {% else %}
+                <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
+            {% endif %}
+        </div>
         </div>
       </div>
     {% empty %}
@@ -39,7 +45,13 @@
         <td>{{ asignacion.servicio.tipo_servicio.nombre }}</td>
         <td>{{ asignacion.servicio.fecha_ejecucion }}</td>
         <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
-        <td><a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar </a></td>
+        <td>{% if asignacion.servicio.tipo_servicio.nombre == 'Fumigacion' %}
+          <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-danger btn-sm">Actualizar para Fumigación</a>
+      {% elif asignacion.servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
+          <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-info btn-sm">Actualizar para Lavado</a>
+      {% else %}
+          <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
+      {% endif %}</td>
       </tr>
       {% empty %}
       <tr>
