@@ -28,10 +28,10 @@ urlpatterns = [
     path('login/', views.user_login, name = "login.html"),
     path('logout/', views.user_logout, name = "logout"),
     path('account/', include('servicios.Account.urls')),
+    path('bienvenida/', welcome_view, name='welcome'),
     path('password-change/', auth_views.PasswordChangeView.as_view(success_url=reverse_lazy('account:password_change_done')), name='password_change'),
     path('servicios_cliente/', views.cliente_servicios, name='cliente_servicios'),
-    #path('delete-producto/<int:pk>/', delete_producto, name='delete_producto'),
-    #path('delete-evidencia/<int:pk>/', delete_evidencia, name='delete_evidencia'),
+    path('delete_servicio/<int:servicio_id>/', views.eliminar_servicio, name='delete_servicio'),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

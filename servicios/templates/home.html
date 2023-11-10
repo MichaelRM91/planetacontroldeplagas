@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <section class="container mt-5">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 text-center">
+        <img src="{% static 'images/imagen.png' %}" class="img-fluid mb-4" alt="Welcome Image" width="50%">
+        <h2 class="display-4">Bienvenido, {{ user.username }}</h2>
+        <p class="lead">Gracias por iniciar sesión en nuestro sitio. Estamos felices de tenerte aquí.</p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

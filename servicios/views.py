@@ -33,7 +33,7 @@ from .forms import (
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicios_list(request):
-    servicios = Servicio.objects.exclude(estado_servicio=2).order_by('-id')
+    servicios = Servicio.objects.exclude(estado_servicio__in=[2, 4]).order_by('-id')
     print(servicios)
     form = AsignacionServicioForm(request.POST)
     return render(request, "servicios/servicios_list.html", {"servicios": servicios, "form": form})
@@ -409,15 +409,12 @@ class LavadoInline():
         return redirect('ver_servicios_tecnico')
     
     def formset_anexos_valid(self, formset):
-        """
-        Hook for custom formset saving.Useful if you have multiple formsets
-        """
         anexos = formset.save(commit=False)  
         
         for obj in formset.deleted_objects:
             obj.delete()
         for anexo in anexos:
-            anexo.servicio_fumigacion = self.object
+            anexo.servicio_lavado_tanque = self.object
             anexo.save()
             
 class LavadoCreate(LavadoInline, CreateView):
@@ -501,7 +498,7 @@ def user_login(request):
             })
         else:
             login(request, user)
-            return redirect('/')
+            return redirect('welcome')
 
 
 def user_logout(request):
@@ -517,3 +514,13 @@ def cliente_servicios(request):
     return render(request, 'servicios/servicios_client.html', {
         'servicios': servicios
     })
+    
+@login_required
+def welcome_view(request):
+    return render(request, 'home.html')
+
+def eliminar_servicio(request, servicio_id):
+    servicio = Servicio.objects.get(id=servicio_id)
+    servicio.estado_servicio_id = 4
+    servicio.save()
+    return redirect('servicios_list')
