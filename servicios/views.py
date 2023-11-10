@@ -457,32 +457,27 @@ class LavadoUpdate(LavadoInline, UpdateView):
             'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='anexos'),
         }    
         
-# class LavadoDetail(DetailView):
-#     model = ServicioLavadoTanque
+class LavadoDetail(DetailView):
+    model = ServicioLavadoTanque
 
-#     def get_object(self, queryset=None):
-#         # Recupera el atributo único de la URL en lugar de usar la pk
-#         servicio_id = self.kwargs.get('servicio_id')
+    def get_object(self, queryset=None):
+        # Recupera el atributo único de la URL en lugar de usar la pk
+        servicio_id = self.kwargs.get('servicio_id')
         
-#         # Realiza una consulta para obtener el objeto utilizando el atributo único
-#         # Asegúrate de importar el modelo correcto y ajustar el nombre del campo
-#         return ServicioFumigacion.objects.get(servicio_id=servicio_id)
-#     def get_context_data(self, **kwargs):
-#         ctx = super(LavadoDetail, self).get_context_data(**kwargs)
-#         ctx['named_formsets'] = self.get_named_formsets()
-#         servicio_id = self.kwargs.get('servicio_id')
-#         ctx['servicio'] = Servicio.objects.get(id=servicio_id) if servicio_id else None
-#         ctx['servicio_fumigacion_list'] = ServicioFumigacion.objects.filter(servicio=servicio_id) if servicio_id else None
-#         servicioFumigacion = ServicioFumigacion.objects.filter(servicio=servicio_id).first() if servicio_id else None
-#         ctx['evidencia_medida'] = EvidenciaMedida.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
-#         ctx['productos_utilizados'] = ProductoUtilizado.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
-#         ctx['precauciones'] = ServicioPrecaucion.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
-#         ctx['recomendaciones'] = ServicioRecomendacion.objects.filter(servicio_fumigacion=servicioFumigacion) if servicioFumigacion else None
-#         asignacion = AsignacionServicio.objects.get(servicio_id=servicio_id)
-#         tecnico_asignado = asignacion.tecnico
-#         ctx['tecnico'] = tecnico_asignado
+        # Realiza una consulta para obtener el objeto utilizando el atributo único
+        # Asegúrate de importar el modelo correcto y ajustar el nombre del campo
+        return ServicioLavadoTanque.objects.get(servicio_id=servicio_id)
+    def get_context_data(self, **kwargs):
+        ctx = super(LavadoDetail, self).get_context_data(**kwargs)
+        ctx['named_formsets'] = self.get_named_formsets()
+        servicio_id = self.kwargs.get('servicio_id')
+        ctx['servicio'] = Servicio.objects.get(id=servicio_id) if servicio_id else None
+        ctx['servicio_lavado_list'] = ServicioLavadoTanque.objects.filter(servicio=servicio_id) if servicio_id else None
+        asignacion = AsignacionServicio.objects.get(servicio_id=servicio_id)
+        tecnico_asignado = asignacion.tecnico
+        ctx['tecnico'] = tecnico_asignado
         
-#         return ctx
+        return ctx
 
 def user_login(request):
     if request.method == 'GET':
