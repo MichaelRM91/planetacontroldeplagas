@@ -14,12 +14,12 @@
           <p class="card-text">Estado del Servicio: {{ asignacion.servicio.estado_servicio.nombre }}</p>
           <div class="form-buttons">
             {% if asignacion.servicio.tipo_servicio.nombre == 'Fumigacion' %}
-                <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-danger btn-sm">Actualizar para Fumigación</a>
+              <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-danger btn-sm">Certificado Fumigación</a>
             {% elif asignacion.servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
-                <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-info btn-sm">Actualizar para Lavado</a>
+              <a href="{% url 'details_lavado' asignacion.servicio.id %}" class="btn btn-info btn-sm">Certificado Lavado</a>
             {% else %}
-                <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
-            {% endif %}
+            <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
+      {% endif %}
         </div>
         </div>
       </div>
@@ -45,13 +45,15 @@
         <td>{{ asignacion.servicio.tipo_servicio.nombre }}</td>
         <td>{{ asignacion.servicio.fecha_ejecucion }}</td>
         <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
-        <td>{% if asignacion.servicio.tipo_servicio.nombre == 'Fumigacion' %}
+        <td>
+          {% if asignacion.servicio.tipo_servicio.nombre == 'Fumigacion' %}
           <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-danger btn-sm">Certificado Fumigación</a>
-      {% elif asignacion.servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
+          {% elif asignacion.servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
           <a href="{% url 'details_lavado' asignacion.servicio.id %}" class="btn btn-info btn-sm">Certificado Lavado</a>
-      {% else %}
+          {% else %}
           <a href="{% url 'details_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
-      {% endif %}</td>
+      {% endif %}
+    </td>
       </tr>
       {% empty %}
       <tr>

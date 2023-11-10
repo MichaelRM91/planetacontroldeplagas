@@ -50,7 +50,13 @@
           <td>{{ servicio.estado_servicio}}</td>
           <td>{{ servicio.asignacionservicio_set.last.tecnico | default:"Sin asignar" }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}
           <td>
-            <a href="{% url 'details_product' servicio.id %}" class="btn btn-sm btn-success me-2">Certificado</a>
+            {% if servicio.tipo_servicio.nombre == 'Fumigacion' %}
+              <a href="{% url 'details_product' servicio.id %}" class="btn btn-sm btn-primary me-2">Certificado Fumigación</a>
+            {% elif servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
+              <a href="{% url 'details_lavado' servicio.id %}" class="btn btn-sm btn-success me-2">Certificado Lavado</a>
+            {% else %}
+              <a href="{% url 'details_product' servicio.id %}" class="btn btn-sm btn-success me-2">Certificado</a>
+            {% endif %}
           </td>
         </tr>
         {% empty %}
