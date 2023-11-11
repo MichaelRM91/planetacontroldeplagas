@@ -135,3 +135,13 @@ class AsignacionServicioForm(forms.ModelForm):
         ),
         empty_label=None,
     )
+
+class FirmaLavadoForm(forms.ModelForm):
+    class Meta:
+        model = firmas_servicio_Lavado
+        fields = ['imagen']
+
+class FirmaFumigacionForm(forms.ModelForm):
+    class Meta:
+        model = firmas_servicio_fumigacion
+        fields = ['imagen']

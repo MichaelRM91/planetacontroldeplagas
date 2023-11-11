@@ -4,7 +4,9 @@
 {% load static %}
 {% block content %}
 <div class="container p-4" method="post" id="product_form">
-  <a href="{% url 'generar_pdf' servicio.id %}" class="btn btn-primary" target="_blank" >Generar PDF</a>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="{% static 'scripts/generate_pdf.js' %}"></script>
+  <button class="btn btn-primary" id="generatePdfBtn" onclick="generatePdfBtn('{{ servicio.cliente.razon_social}}' , '{{ servicio.id}}' )">Generar PDF</button>
     {% csrf_token %}
     <table class="card-header table table-bordered" border="0" cellpadding="0" cellspacing="0" id="sheet0" class="gridlines">
       <tbody>
@@ -13,18 +15,18 @@
             <img src="{% static 'images/logo.png' %}" alt="Logo" width="50%">
           </td>
           <td colspan="2" style="text-align:center;">
-            NIT.900939670-0<br>
-            Cra 41 B n° 43-75 B/ Antonio Nariño<br>
-            Telefono: 3386559 cel: 315 533 35 02 - 314 616 56 31
+            {{ infoEmpresas.nit }}<br>
+            {{ infoEmpresas.direccion }}<br>
+            Telefono: {{ infoEmpresas.telefono }} cel: {{ infoEmpresas.celular }}
           </td>
         </tr>
 
         <tr>
           <td colspan="3" style="text-align:center;">
             <b>
-              EMPRESA PRIVADA CERTIFICADA Y VIGILADA POR LA SECRETARIA DE SALUD<br>
-              DEPARTAMENTAL RADICADO N°201941450200077491 FECHA: 12-04-2019 TRD<br>
-              4145.020.14.12.187.007749<br>
+              {{ infoEmpresas.concepto_radicado }}<br>
+              RADICADO {{ infoEmpresas.no_radicado }} FECHA: {{ infoEmpresas.fecha_radicado }}<br>
+              TRD {{ infoEmpresas.TRD_radicado }}<br>
             </b>
           </td>
           <td  colspan="1" style="text-align:center;">
@@ -128,44 +130,29 @@
               {{servicio.observaciones}}
             {% endfor %}
           </td>
-          <td colspan="1"><br><strong>FIRMA</strong></td>
-        </tr>
-        <tr style="text-align:center;">
-          <td colspan="6">
-            <form id="firmaForm" enctype="multipart/form-data">
-              <!-- Añade un estilo margin-right al input para moverlo a la derecha -->
-              <input type="file" id="firmaInput" accept="image/*" onchange="previewFirma()" style="margin-left: 700px;">
-              <img id="firmaPreview" style="max-width: 100px; max-height: 100px;">
-            </form>
+          <td colspan="1"><strong>FIRMA</strong>
+            {% if firma %}
+              <img src="{{ firma.0.imagen.url }}" alt="Imagen de firma" style="max-width: 250px; max-height: 100%;">
+            {% else %}
+              <form action=" {% url "guardar_firma_fumigacion" servicio.id %}" method="POST" id="firmaForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input class="form-control" type="file" id="formFile" name='imagen' accept="image/*" onchange="previewFirma()" style="width: 221px;">
+                <img id="firmaPreview" style="max-width: 250px; max-height: 100%;">
+                <button class="btn btn-primary d-none" id="guardarFirma">Guardar Firma</button>
+              </form>
+
+            {% endif %}
           </td>
         </tr>
         <tr style="text-align:center;">
           <td colspan="6">
             <b>
-              AGRADECEMOS SU CONFIANZA <br>
-              ESTAMOS 100% COMPROMETIDOS CON LA PRESERVACIÓN DEL MEDIO AMBIENTE<br>
-              contacto@planetacontrolplagas.com / www.planetacontrolplagas.com<br>
+              {{ infoEmpresas.agradecimiento }}<br>
+              {{ infoEmpresas.compromiso }}<br>
+              {{ infoEmpresas.correo }} / {{ infoEmpresas.pagina_web }}<br>
             </b>
           </td>
         </tr>
-        
-        <script>
-          function previewFirma() {
-            var input = document.getElementById('firmaInput');
-            var preview = document.getElementById('firmaPreview');
-        
-            if (input.files && input.files[0]) {
-              var reader = new FileReader();
-        
-              reader.onload = function (e) {
-                preview.src = e.target.result;
-              };
-        
-              reader.readAsDataURL(input.files[0]);
-            }
-          }
-        </script>
-        
       </tbody>
     </table>
     

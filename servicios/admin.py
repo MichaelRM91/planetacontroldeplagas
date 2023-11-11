@@ -1,7 +1,13 @@
 from django.contrib import admin
 from servicios.forms import *
+from django import forms
 
 from .models import *
+
+class infoEmpresaAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.CharField: {'widget': forms.TextInput(attrs={'style': 'width: 40em;'})},
+    }
 
 # Register your models here.
 admin.site.register(TipoServicio)
@@ -33,6 +39,9 @@ admin.site.register(UbicacionTanque)
 admin.site.register(MaterialTanque)
 admin.site.register(UnidadMedidaTanque)
 admin.site.register(EstadoInternoTanque)
+admin.site.register(infoEmpresa, infoEmpresaAdmin)
+admin.site.register(firmas_servicio_fumigacion)
+admin.site.register(firmas_servicio_Lavado)
 
 class ServicioFumigacionAdmin(admin.ModelAdmin):
     form = ServicioFumigacionForm

@@ -281,3 +281,28 @@ class AsignacionServicio(models.Model):
         # Guardar el servicio
         servicio.save()
         super().save(*args, **kwargs)
+        
+        
+class infoEmpresa(models.Model):
+    nit = models.CharField(max_length=150)
+    direccion = models.CharField(max_length=150)
+    telefono = models.CharField(max_length=150)
+    celular = models.CharField(max_length=150)
+    no_radicado = models.CharField(max_length=150)
+    fecha_radicado = models.CharField(max_length=510)
+    TRD_radicado = models.CharField(max_length=150)
+    concepto_radicado = models.CharField(max_length=200)
+    agradecimiento = models.CharField(max_length=200)
+    compromiso = models.CharField(max_length=200)
+    correo = models.CharField(max_length=150)
+    pagina_web = models.CharField(max_length=150)
+    procedimiento_basico = models.CharField(max_length=1000)
+    
+class firmas_servicio_Lavado(models.Model):
+    servicio_Lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE, default=20, unique=True)
+    imagen = models.ImageField(upload_to='media/firmas_lavado/')
+   
+class firmas_servicio_fumigacion(models.Model):
+    servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE, default=20, unique=True)
+    imagen = models.ImageField(upload_to='media/firmas_fumigacion/')
+    

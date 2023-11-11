@@ -33,7 +33,7 @@ urlpatterns = [
     path('password-change/', auth_views.PasswordChangeView.as_view(success_url=reverse_lazy('account:password_change_done')), name='password_change'),
     path('servicios_cliente/', views.cliente_servicios, name='cliente_servicios'),
     path('delete_servicio/<int:servicio_id>/', views.eliminar_servicio, name='delete_servicio'),
-    path('generar_pdf/<int:id_servicio>/', GeneratePDF.as_view(), name='generar_pdf'),
-
+    path('guardar_firma_lavado/<int:servicio_id>/', views.guardar_firma_lavado, name='guardar_firma_lavado'),
+    path('guardar_firma_fumigacion/<int:servicio_id>/', views.guardar_firma_fumigacion, name='guardar_firma_fumigacion'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,6 +4,9 @@
 {% load static %}
 {% block content %}
 <div class="container p-4" method="post" id="product_form">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="{% static 'scripts/generate_pdf.js' %}"></script>
+  <button class="btn btn-primary" id="generatePdfBtn" onclick="generatePdfBtn('{{ servicio.cliente.razon_social}}' , '{{ servicio.id}}' )">Generar PDF</button>
     {% csrf_token %}
     <table class="card-header table table-bordered" border="0" cellpadding="0" cellspacing="0" id="sheet0" class="gridlines">
       <tbody>
@@ -12,18 +15,18 @@
             <img src="{% static 'images/logo.png' %}" alt="Logo" width="50%">
           </td>
           <td colspan="2" style="text-align:center;">
-            NIT.900939670-0<br>
-            Cra 41 B n° 43-75 B/ Antonio Nariño<br>
-            Telefono: 3386559 cel: 315 533 35 02 - 314 616 56 31
+            {{ infoEmpresas.nit }}<br>
+            {{ infoEmpresas.direccion }}<br>
+            Telefono: {{ infoEmpresas.telefono }} cel: {{ infoEmpresas.celular }}
           </td>
         </tr>
 
         <tr>
           <td colspan="3" style="text-align:center;">
             <b>
-              EMPRESA PRIVADA CERTIFICADA Y VIGILADA POR LA SECRETARIA DE SALUD<br>
-              DEPARTAMENTAL RADICADO N°201941450200077491 FECHA: 12-04-2019 TRD<br>
-              4145.020.14.12.187.007749<br>
+              {{ infoEmpresas.concepto_radicado }}<br>
+              RADICADO {{ infoEmpresas.no_radicado }} FECHA: {{ infoEmpresas.fecha_radicado }}<br>
+              TRD {{ infoEmpresas.TRD_radicado }}<br>
             </b>
           </td>
           <td  colspan="1" style="text-align:center;">
@@ -52,31 +55,92 @@
           <td  colspan="1"><br><strong>FECHA VENCIMIENTO</strong> </td>
           <td  colspan="1"><br>{{ servicio.fecha_vencimiento }}</td>
         </tr>
-        <tr>  
-    </table>
+        <tr> 
+          <td  colspan="6" style="text-align:center;"><strong>PROCEDIMIENTO BASICO</strong>
+        </tr>
+        <tr> 
+          <td colspan="6" style="text-align:center;">{{ infoEmpresas.procedimiento_basico }}</td>
+        </tr>
+        <tr>
+          <td  colspan="2" style="text-align:center;"><br><strong>IDENTIFICACION DEL TANQUE</strong> </td>
 
-    {% for lavado in servicio_lavado_list %}
-    
-      <p> {{lavado.servicio}} <p/>
-      <p> {{lavado.ubicacion_tanque}} <p/>
-      <p> {{lavado.material_tanque}} <p/>
-      <p> {{lavado.unidad_medida}} <p/>
-      <p> {{lavado.revestimiento_tanque}} <p/>
-      <p> {{lavado.estado_interno_tanque}} <p/>
-      <p> {{lavado.volumen_almacenamiento}} <p/>
-      <p> {{lavado.estado_tuberias}} <p/>
-      <p> {{lavado.estado_empaque}} <p/>
-      <p> {{lavado.hermeticidad_tanque}} <p/>
-      <p> {{lavado.observaciones}} <p/>
-    {% endfor %}
-
-    {% for anexo in anexos %}
+          <td  colspan="2" style="text-align:center;"><br><strong>FACTORES DE RIESGO</strong></td>
+        </tr>
+        {% for lavado in servicio_lavado_list %}
+        <tr>
+          <td  colspan="1" style="text-align:center;"><strong>UBICACION DEL TANQUE</strong></td>
+          <td  colspan="1" style="text-align:center;"> {{lavado.ubicacion_tanque}}</td>
+          <td  colspan="1" style="text-align:center;"><strong>ESTADO INTERNO DEL TANQUE</strong></td>
+          <td  colspan="1" style="text-align:center;">{{lavado.estado_interno_tanque}}</td>
+        </tr>
+        <tr>
+          <td  colspan="1" style="text-align:center;"><strong>MATERIAL DEL TANQUE</strong></td>
+          <td  colspan="1" style="text-align:center;"> {{lavado.material_tanque}}</td>
+          <td  colspan="1" style="text-align:center;"><strong>ESTADO TUBERIAS</strong></td>
+          <td  colspan="1" style="text-align:center;">{{lavado.estado_tuberias}}</td>
+        </tr>
+        <tr>
+          <td  colspan="1" style="text-align:center;"><strong>VOLUMEN DE ALMACENAMIENTO</strong></td>
+          <td  colspan="1" style="text-align:center;"> {{lavado.volumen_almacenamiento}}</td>
+          <td  colspan="1" style="text-align:center;"><strong>ESTADO EMPAQUE</strong></td>
+          <td  colspan="1" style="text-align:center;">{{lavado.estado_empaque}} </td>
+        </tr>
+        <tr>
+          <td  colspan="1" style="text-align:center;"><strong>HERMETICIDAD</strong></td>
+          <td  colspan="1" style="text-align:center;"> {{lavado.hermeticidad_tanque}}</td>
+        </tr>
+        <tr> 
+          <td  colspan="6" style="text-align:center;"><strong>ANEXOS</strong>
+        </tr>
+        <tr>
+            {% for anexo in anexos %}
+            <td colspan="2" style="text-align:center;">
+              <img src="{{ anexo.imagen.url }}" alt="Imagen del anexo" style="max-width: 250px; max-height: 100%;">
+              <br>
+              {{anexo.descripcion}}
+            </td>
+            {% if forloop.counter|divisibleby:2 %}</tr><tr>{% endif %}
+            {% endfor %}
+          
         
-      <p> imagen: <p/>
-      <img src="{{ anexo.imagen.url }}" alt="Imagen del anexo">
-      <p> descripcion: <p/>
-      <p> {{anexo.descripcion}} <p/>
-    {% endfor %}
-    
+        </tr>
+
+        <tr>
+          <td colspan="1"><br><strong>INGENIERO AGRONOMO </strong></td>
+          <td colspan="1"><br>Miguel Meneses Alvarez</td>
+          <td colspan="1"><br><strong>TECNICO APLICADOR </strong></td>
+
+        </tr>
+        <tr>
+          <td colspan="1"><br><strong>OBSERVACIONES</strong></td>
+          <td colspan="2"><br>
+            {{lavado.observaciones}}
+          </td>
+          <td colspan="1"><strong>FIRMA</strong>
+            {% if firma %}
+              <img src="{{ firma.0.imagen.url }}" alt="Imagen de firma" style="max-width: 250px; max-height: 100%;">
+            {% else %}
+              <form action=" {% url "guardar_firma_lavado" servicio.id %}" method="POST" id="firmaForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input class="form-control" type="file" id="formFile" name='imagen' accept="image/*" onchange="previewFirma()" style="width: 221px;">
+                <img id="firmaPreview" style="max-width: 250px; max-height: 100%;">
+                <button class="btn btn-primary d-none" id="guardarFirma">Guardar Firma</button>
+              </form>
+
+            {% endif %}
+          </td>
+        </tr>
+        <tr style="text-align:center;">
+          <td colspan="6">
+            <b>
+              {{ infoEmpresas.agradecimiento }}<br>
+              {{ infoEmpresas.compromiso }}<br>
+              {{ infoEmpresas.correo }} / {{ infoEmpresas.pagina_web }}<br>
+            </b>
+          </td>
+        </tr>
+        {% endfor %}
+
+    </table>
     
 {% endblock content %}

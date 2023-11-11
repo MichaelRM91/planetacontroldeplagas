@@ -26,12 +26,14 @@ from .forms import (
     ServicioLavadoTanqueForm,
     ServicioFumigacionRecomendacionesFormSet,
     ServicioFumigacionPrecaucionesFormSet,
-    ServicioLavadoTanqueAnexosFormset
+    ServicioLavadoTanqueAnexosFormset,
+    FirmaLavadoForm, FirmaFumigacionForm
 )
 
 from django.views import View
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -368,6 +370,8 @@ class ProductDetail(DetailView):
         asignacion = AsignacionServicio.objects.get(servicio_id=servicio_id)
         tecnico_asignado = asignacion.tecnico
         ctx['tecnico'] = tecnico_asignado
+        ctx['infoEmpresas'] = infoEmpresa.objects.get(id=1)
+        ctx['firma'] = firmas_servicio_fumigacion.objects.filter(servicio_fumigacion=servicioFumigacion) if servicio_id else None
         
         return ctx
 
@@ -481,6 +485,8 @@ class LavadoDetail(DetailView):
         ctx['anexos'] = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado) if servicio_id else None
         tecnico_asignado = asignacion.tecnico
         ctx['tecnico'] = tecnico_asignado
+        ctx['infoEmpresas'] = infoEmpresa.objects.get(id=1)
+        ctx['firma'] = firmas_servicio_Lavado.objects.filter(servicio_Lavado=servicio_lavado) if servicio_id else None
         anexo = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado)
         print(servicio_id)
         print(asignacion)
@@ -536,45 +542,30 @@ def eliminar_servicio(request, servicio_id):
     servicio.save()
     return redirect('servicios_list')
 
-class GeneratePDF(View):
-    def get(self, request, id_servicio, *args, **kwargs): 
-        servicio_id = self.kwargs.get('servicio_id')  
-        servicioFumigacion = ServicioFumigacion.objects.filter(servicio=id_servicio).first()  
-          
-        servicio = get_object_or_404(Servicio, id=id_servicio)
-        cliente = servicio.cliente
-        precauciones = ServicioPrecaucion.objects.filter(servicio_fumigacion=servicioFumigacion)
-        recomendaciones = ServicioRecomendacion.objects.filter(servicio_fumigacion=servicioFumigacion)
-        evidencia_medida = EvidenciaMedida.objects.filter(servicio_fumigacion=servicioFumigacion)
-        productos_utilizados = ProductoUtilizado.objects.filter(servicio_fumigacion=servicioFumigacion)
-        servicio_fumigacion_list = ServicioFumigacion.objects.filter(servicio=id_servicio)
-        print(servicioFumigacion)
-        print(servicio_id)
-        # Crea el contexto con las variables necesarias
-        context = {
-            'servicio': servicio,
-            'cliente': cliente,
-            'precauciones': precauciones,
-            'recomendaciones': recomendaciones,
-            'evidencia_medida': evidencia_medida,
-            'productos_utilizados': productos_utilizados,
-            'servicio_fumigacion_list': servicio_fumigacion_list,
-            # Agrega otras variables según sea necesario
-        }
+def guardar_firma_lavado(request, servicio_id):
+    if request.method == 'POST':
+        form = FirmaLavadoForm(request.POST, request.FILES)
+        if form.is_valid():
+            firma = form.save(commit=False)
+            firma.servicio_Lavado = ServicioLavadoTanque.objects.get(servicio=servicio_id)
+            firma.save()
+            return redirect('details_lavado', servicio_id=servicio_id)
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        form = FirmaLavadoForm()
+    return redirect('details_lavado', servicio_id=servicio_id)
 
-        # Carga el template HTML
-        template_path = 'servicios/serviciofumigacion_detail.html'  # Reemplaza con la ruta correcta
-        template = get_template(template_path)
-        html = template.render(context)
-
-        # Crea un objeto HttpResponse con el contenido del PDF
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="certificadoFumigacion.pdf"'
-
-        # Convierte el HTML a PDF
-        pisa_status = pisa.CreatePDF(html, dest=response)
-
-        # Si se generó correctamente, devuelve el objeto HttpResponse
-        if pisa_status.err:
-            return HttpResponse('Error al generar el PDF', status=500)
-        return response
+def guardar_firma_fumigacion(request, servicio_id):
+    if request.method == 'POST':
+        form = FirmaFumigacionForm(request.POST, request.FILES)
+        if form.is_valid():
+            firma = form.save(commit=False)
+            firma.servicio_fumigacion = ServicioFumigacion.objects.get(servicio=servicio_id)
+            firma.save()
+            return redirect('details_product', servicio_id=servicio_id)
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        form = FirmaFumigacionForm()
+    return redirect('details_product', servicio_id=servicio_id)
