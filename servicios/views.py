@@ -29,6 +29,10 @@ from .forms import (
     ServicioLavadoTanqueAnexosFormset
 )
 
+from django.views import View
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 # Create your views here.
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
@@ -531,3 +535,46 @@ def eliminar_servicio(request, servicio_id):
     servicio.estado_servicio_id = 4
     servicio.save()
     return redirect('servicios_list')
+
+class GeneratePDF(View):
+    def get(self, request, id_servicio, *args, **kwargs): 
+        servicio_id = self.kwargs.get('servicio_id')  
+        servicioFumigacion = ServicioFumigacion.objects.filter(servicio=id_servicio).first()  
+          
+        servicio = get_object_or_404(Servicio, id=id_servicio)
+        cliente = servicio.cliente
+        precauciones = ServicioPrecaucion.objects.filter(servicio_fumigacion=servicioFumigacion)
+        recomendaciones = ServicioRecomendacion.objects.filter(servicio_fumigacion=servicioFumigacion)
+        evidencia_medida = EvidenciaMedida.objects.filter(servicio_fumigacion=servicioFumigacion)
+        productos_utilizados = ProductoUtilizado.objects.filter(servicio_fumigacion=servicioFumigacion)
+        servicio_fumigacion_list = ServicioFumigacion.objects.filter(servicio=id_servicio)
+        print(servicioFumigacion)
+        print(servicio_id)
+        # Crea el contexto con las variables necesarias
+        context = {
+            'servicio': servicio,
+            'cliente': cliente,
+            'precauciones': precauciones,
+            'recomendaciones': recomendaciones,
+            'evidencia_medida': evidencia_medida,
+            'productos_utilizados': productos_utilizados,
+            'servicio_fumigacion_list': servicio_fumigacion_list,
+            # Agrega otras variables según sea necesario
+        }
+
+        # Carga el template HTML
+        template_path = 'servicios/serviciofumigacion_detail.html'  # Reemplaza con la ruta correcta
+        template = get_template(template_path)
+        html = template.render(context)
+
+        # Crea un objeto HttpResponse con el contenido del PDF
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="certificadoFumigacion.pdf"'
+
+        # Convierte el HTML a PDF
+        pisa_status = pisa.CreatePDF(html, dest=response)
+
+        # Si se generó correctamente, devuelve el objeto HttpResponse
+        if pisa_status.err:
+            return HttpResponse('Error al generar el PDF', status=500)
+        return response
