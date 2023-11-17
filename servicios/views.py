@@ -422,7 +422,7 @@ class LavadoInline():
         for obj in formset.deleted_objects:
             obj.delete()
         for anexo in anexos:
-            anexo.servicio_lavado_tanque = self.object
+            anexo.servicio_Lavado= self.object
             anexo.save()
             
 class LavadoCreate(LavadoInline, CreateView):
@@ -438,11 +438,11 @@ class LavadoCreate(LavadoInline, CreateView):
     def get_named_formsets(self):
         if self.request.method == "GET":
             return {
-                'anexos': ServicioLavadoTanqueAnexosFormset(prefix='anexos'),   
+                'anexos': ServicioLavadoTanqueAnexosFormset(prefix='anexos')  
             }
         else:
             return {
-                'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, prefix='anexos'),
+                'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, prefix='anexos')
             }  
             
 class LavadoUpdate(LavadoInline, UpdateView):
