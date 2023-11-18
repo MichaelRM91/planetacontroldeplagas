@@ -27,7 +27,7 @@ from .forms import (
     ServicioFumigacionRecomendacionesFormSet,
     ServicioFumigacionPrecaucionesFormSet,
     ServicioLavadoTanqueAnexosFormset,
-    FirmaLavadoForm, FirmaFumigacionForm
+    FirmaLavadoForm, FirmaFumigacionForm, ServicioLavadoTanqueFormset
 )
 
 from django.views import View
@@ -422,8 +422,17 @@ class LavadoInline():
         for obj in formset.deleted_objects:
             obj.delete()
         for anexo in anexos:
-            anexo.servicio_Lavado= self.object
+            anexo.servicio_lavado= self.object
             anexo.save()
+            
+    def formset_tanques_valid(self, formset):
+        tanques = formset.save(commit=False)  
+        
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for tanque in tanques:
+            tanque.servicio_lavado= self.object
+            tanque.save()
             
 class LavadoCreate(LavadoInline, CreateView):
 
@@ -438,11 +447,13 @@ class LavadoCreate(LavadoInline, CreateView):
     def get_named_formsets(self):
         if self.request.method == "GET":
             return {
-                'anexos': ServicioLavadoTanqueAnexosFormset(prefix='anexos')  
+                'anexos': ServicioLavadoTanqueAnexosFormset(prefix='anexos'), 
+                'tanques': ServicioLavadoTanqueFormset(prefix='tanques') 
             }
         else:
             return {
-                'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, prefix='anexos')
+                'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, prefix='anexos'),
+                'tanques': ServicioLavadoTanqueFormset(self.request.POST or None, self.request.FILES or None, prefix='tanques')
             }  
             
 class LavadoUpdate(LavadoInline, UpdateView):
@@ -463,6 +474,7 @@ class LavadoUpdate(LavadoInline, UpdateView):
     def get_named_formsets(self):
         return {
             'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='anexos'),
+            'tanques': ServicioLavadoTanqueFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='tanques')
         }    
         
 class LavadoDetail(DetailView):

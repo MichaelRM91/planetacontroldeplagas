@@ -219,6 +219,11 @@ class HermeticidadTanque(models.Model):
 
 class ServicioLavadoTanque(models.Model):
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_lavado_tanque')
+    def __str__(self):
+        return f"Servicio de Lavado Tanque: {self.servicio.id}"
+    
+class Tanque(models.Model):
+    servicio_lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE)
     ubicacion_tanque = models.ForeignKey(UbicacionTanque, on_delete=models.CASCADE, null=True, blank=True)
     material_tanque = models.ForeignKey(MaterialTanque, on_delete=models.CASCADE, null=True, blank=True)
     unidad_medida = models.ForeignKey(UnidadMedidaTanque, on_delete=models.CASCADE, null=True)
@@ -230,15 +235,15 @@ class ServicioLavadoTanque(models.Model):
     hermeticidad_tanque = models.ForeignKey(HermeticidadTanque, on_delete=models.CASCADE)
     observaciones = models.TextField(max_length=500, null=True, blank=True)
     
-    #campos otros
+    # Campos otros
     otra_ubicacion_tanque = models.CharField(max_length=50, null=True, blank=True)
     otro_material_tanque = models.CharField(max_length=50, null=True, blank=True)
-    
+
     def __str__(self):
-        return f"Servicio de Lavado Tanque: {self.servicio.id}"
+        return f"Tanque ID: {self.id}"
     
 class AnexoImagen(models.Model):
-    servicio_Lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE, default=20)
+    servicio_lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE, default=20)
     imagen = models.ImageField(upload_to='media/anexoImagenes/')
     descripcion = models.TextField()
 

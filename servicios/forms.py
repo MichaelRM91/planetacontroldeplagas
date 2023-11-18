@@ -62,6 +62,11 @@ class AnexosForm(forms.ModelForm):
         model = AnexoImagen
         fields = '__all__'
         
+class TanquesForm(forms.ModelForm):
+    class Meta:
+        model = Tanque
+        fields = '__all__'
+        
     
 ServicioFumigacionRecomendacionesFormSet = inlineformset_factory(
     ServicioFumigacion,
@@ -99,6 +104,13 @@ ServicioLavadoTanqueAnexosFormset = inlineformset_factory(
     extra=1, can_delete=True, can_delete_extra=True
 )
 
+ServicioLavadoTanqueFormset = inlineformset_factory(
+    ServicioLavadoTanque,
+    Tanque,
+    form=TanquesForm,
+    extra=1, can_delete=True, can_delete_extra=True
+)
+
 
 class ServicioFumigacionForm(forms.ModelForm):
     class Meta:
@@ -117,7 +129,7 @@ class ServicioLavadoTanqueForm(forms.ModelForm):
   
     class Meta:
         model = ServicioLavadoTanque
-        fields = ["ubicacion_tanque", "material_tanque", "unidad_medida", "revestimiento_tanque", "estado_interno_tanque", "volumen_almacenamiento", "estado_tuberias", "estado_empaque", "hermeticidad_tanque", "observaciones", "otra_ubicacion_tanque", "otro_material_tanque"]
+        fields = []
         widgets = {
             'servicio': forms.HiddenInput()  # Campo oculto para el servicio
         }

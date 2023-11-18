@@ -42,6 +42,7 @@ admin.site.register(EstadoInternoTanque)
 admin.site.register(infoEmpresa, infoEmpresaAdmin)
 admin.site.register(firmas_servicio_fumigacion)
 admin.site.register(firmas_servicio_Lavado)
+admin.site.register(Tanque)
 
 class ServicioFumigacionAdmin(admin.ModelAdmin):
     form = ServicioFumigacionForm

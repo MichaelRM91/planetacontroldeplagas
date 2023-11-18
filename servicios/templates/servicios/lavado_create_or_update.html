@@ -40,6 +40,82 @@
         </div>
         {% endfor %}
     </div>
+
+    {% with named_formsets.tanques as formset %}
+    {{ formset.management_form }}
+    <script type="text/html" id="tanques-template">
+        <tr id="tanques-__prefix__" class="hide_all">
+            {% for fields in formset.empty_form.hidden_fields %}
+                {{ fields }}
+            {% endfor %}
+            {% for fields in formset.empty_form.visible_fields %}
+                <td>{{ fields }}</td>
+            {% endfor %}
+        </tr>
+    </script>
+
+    <div class="table-responsive card mt-4">
+        <div class="card-header card-header-secondary">
+            <h4 class="card-title">Tanques</h4>
+        </div>
+        <table class="table card-body">
+            <thead class="text-secondary">
+                <th>Ubicacion</th>
+                <th>Material</th>
+                <th>Revestimiento</th>
+                <th>Unidad de Medida</th>
+                <th>Estado Interno</th>
+                <th>Vol. Almacenamiento</th>
+                <th>Estado Tuberias</th>
+                <th>Estado Empaque</th>
+                <th>Hermeticidad</th>
+                <th>Observaciones</th>
+                <th>Otra Ubicacion</th>
+                <th>Otro Material</th>
+            </thead>
+            <tbody id="item-tanques">
+                {% for error in formset.non_form_errors %}
+                    <span style="color: red">{{ error }}</span>
+                {% endfor %}
+                {% for formss in formset %}
+                    {{ formss.management_form }}
+                    <tr id="tanques-{{ forloop.counter0 }}" class="hide_all">
+                        {{ formss.id }}
+                        {% for field in formss.visible_fields %}
+                
+            {% endfor %}
+                        <!-- Código para eliminar -->
+                        {% if formss.instance.pk %}
+                            <td>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ formss.instance.pk }}">
+                                    Eliminar
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal{{ formss.instance.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{ formss.instance.pk }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel{{ formss.instance.pk }}">¿Seguro que deseas eliminar esto?</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <!-- Tu código para confirmar la eliminación -->
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="#" id="add-tanques-button" class="btn btn-secondary add-tanques">Añadir Tanque</a>
+    </div>
+    {% endwith %}
    
     
     {% with named_formsets.anexos as formset %}
@@ -131,6 +207,22 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
 <script>
+    $(document).ready(function() {
+      // when user clicks add more btn of envidencias
+        $('.add-tanques').click(function(ev) {
+            ev.preventDefault();
+            var count = $('#item-tanques').children().length;
+            var tmplMarkup = $('#tanques-template').html();
+            var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+            $('#item-tanques').append(compiledTmpl);
+    
+            // update form count
+            $('#id_tanques-TOTAL_FORMS').attr('value', count+1);
+        });
+    });
+  </script>
+  
+<script>
   $(document).ready(function() {
     // when user clicks add more btn of envidencias
       $('.add-anexos').click(function(ev) {
@@ -145,5 +237,6 @@
       });
   });
 </script>
+
         
 {% endblock content %}
