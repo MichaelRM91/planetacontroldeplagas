@@ -61,36 +61,58 @@
         <tr> 
           <td colspan="6" style="text-align:center;">{{ infoEmpresas.procedimiento_basico }}</td>
         </tr>
+        {% for tanque in tanques %}
         <tr>
-          <td  colspan="2" style="text-align:center;"><br><strong>IDENTIFICACION DEL TANQUE</strong> </td>
+          <td  colspan="6" style="text-align:center;"><br><strong>TANQUE NUMERO {{tanque.id}}</strong> </td>
 
-          <td  colspan="2" style="text-align:center;"><br><strong>FACTORES DE RIESGO</strong></td>
         </tr>
-        {% for lavado in servicio_lavado_list %}
+        <tr>
+          <td  colspan="2" style="text-align:center;"><strong>IDENTIFICACION DEL TANQUE</strong> </td>
+
+          <td  colspan="2" style="text-align:center;"><strong>FACTORES DE RIESGO</strong></td>
+        </tr>
         <tr>
           <td  colspan="1" style="text-align:center;"><strong>UBICACION DEL TANQUE</strong></td>
-          <td  colspan="1" style="text-align:center;"> {{lavado.ubicacion_tanque}}</td>
+          <td  colspan="1" style="text-align:center;"> {{tanque.ubicacion_tanque}}</td>
           <td  colspan="1" style="text-align:center;"><strong>ESTADO INTERNO DEL TANQUE</strong></td>
-          <td  colspan="1" style="text-align:center;">{{lavado.estado_interno_tanque}}</td>
+          <td  colspan="1" style="text-align:center;">{{tanque.estado_interno_tanque}}</td>
         </tr>
         <tr>
           <td  colspan="1" style="text-align:center;"><strong>MATERIAL DEL TANQUE</strong></td>
-          <td  colspan="1" style="text-align:center;"> {{lavado.material_tanque}}</td>
+          <td  colspan="1" style="text-align:center;"> {{tanque.material_tanque}}</td>
           <td  colspan="1" style="text-align:center;"><strong>ESTADO TUBERIAS</strong></td>
-          <td  colspan="1" style="text-align:center;">{{lavado.estado_tuberias}}</td>
+          <td  colspan="1" style="text-align:center;">{{tanque.estado_tuberias}}</td>
         </tr>
         <tr>
           <td  colspan="1" style="text-align:center;"><strong>VOLUMEN DE ALMACENAMIENTO</strong></td>
-          <td  colspan="1" style="text-align:center;"> {{lavado.volumen_almacenamiento}}</td>
+          <td  colspan="1" style="text-align:center;"> {{tanque.volumen_almacenamiento}}</td>
           <td  colspan="1" style="text-align:center;"><strong>ESTADO EMPAQUE</strong></td>
-          <td  colspan="1" style="text-align:center;">{{lavado.estado_empaque}} </td>
+          <td  colspan="1" style="text-align:center;">{{tanque.estado_empaque}} </td>
         </tr>
         <tr>
           <td  colspan="1" style="text-align:center;"><strong>HERMETICIDAD</strong></td>
-          <td  colspan="1" style="text-align:center;"> {{lavado.hermeticidad_tanque}}</td>
+          <td  colspan="1" style="text-align:center;"> {{tanque.hermeticidad_tanque}}</td>
+          <td  colspan="1" style="text-align:center;"><strong>UNIDAD DE MEDIDA</strong></td>
+          <td  colspan="1" style="text-align:center;"> {{tanque.unidad_medida}}</td>
         </tr>
+        <tr>
+          {% if tanque.otra_ubicacion_tanque %}
+          <td  colspan="1" style="text-align:center;"><strong>OTRA UBICACION</strong></td>
+          <td  colspan="1" style="text-align:center;"> {{ tanque.otra_ubicacion_tanque }}</td>
+          {% endif %}
+          {% if tanque.otro_material_tanque %}
+          <td  colspan="1" style="text-align:center;"><strong>OTRO MATERIAL</strong></td>
+          <td  colspan="1" style="text-align:center;"> {{ tanque.otro_material_tanque }}</td>
+          {% endif %}
+        </tr>
+
+        <tr>
+          <td  colspan="1" style="text-align:center;"><strong>OBSERVACIONES</strong></td>
+          <td  colspan="4" style="text-align:center;"> {{tanque.observaciones}}</td>
+        </tr>
+        {% endfor %}
         <tr> 
-          <td  colspan="6" style="text-align:center;"><strong>ANEXOS</strong>
+          <td  colspan="6" style="text-align:center;"><br><strong>ANEXOS GENERALES</strong>
         </tr>
         <tr>
             {% for anexo in anexos %}
@@ -106,17 +128,8 @@
         </tr>
 
         <tr>
-          <td colspan="1"><br><strong>INGENIERO AGRONOMO </strong></td>
-          <td colspan="1"><br>Miguel Meneses Alvarez</td>
-          <td colspan="1"><br><strong>TECNICO APLICADOR </strong></td>
-
-        </tr>
-        <tr>
-          <td colspan="1"><br><strong>OBSERVACIONES</strong></td>
-          <td colspan="2"><br>
-            {{lavado.observaciones}}
-          </td>
-          <td colspan="1"><strong>FIRMA</strong>
+          <td colspan="2"><strong>TECNICO APLICADOR </strong></td>
+          <td colspan="2"><strong>FIRMA</strong>
             {% if firma %}
               <img src="{{ firma.0.imagen.url }}" alt="Imagen de firma" style="max-width: 250px; max-height: 100%;">
             {% else %}
@@ -139,47 +152,7 @@
             </b>
           </td>
         </tr>
-        {% endfor %}
+        
 
-    </table>
-
-    <p>Campos tanques</p>
-    {% for tanque in tanques %}
-      <p>{{tanque.id}}</p>
-      <p>Ubicacion Tanque :</p>
-      <p>{{tanque.ubicacion_tanque}}</p>
-      <p>Material Tanque :</p>
-      <p>{{tanque.material_tanque}}</p>
-      <p>Unidad de medida Tanque :</p>
-      <p>{{tanque.unidad_medida}}</p>
-      <p>Revestimiento Tanque :</p>
-      <p>{{tanque.revestimiento_tanque}}</p>
-      <p>Estado Interno Tanque :</p>
-      <p>{{tanque.estado_interno_tanque}}</p>
-      <p>Volumen de Almacenamiento Tanque :</p>
-      <p>{{tanque.volumen_almacenamiento}}</p>
-      <p>Estado Tuberias Tanque :</p>
-      <p>{{tanque.estado_tuberias}}</p>
-      <p>Estado Empaques Tanque :</p>
-      <p>{{tanque.estado_empaque}}</p>
-      <p>Hermeticidad Tanque :</p>
-      <p>{{tanque.hermeticidad_tanque}}</p>
-      <p>Observaciones :</p>
-      <p>{{tanque.observaciones}}</p>
-      
-      <p>Otra Ubicacion :</p>
-      {% if tanque.otra_ubicacion_tanque %}
-      <p>{{ tanque.otra_ubicacion_tanque }}</p>
-      {% else %}
-      <p>No existe otra ubicación para este tanque.</p>
-      {% endif %}
-
-      <p>Otro material :</p>
-      {% if tanque.otro_material_tanque %}
-          <p>{{ tanque.otro_material_tanque }}</p>
-      {% else %}
-          <p>No existe otro material para este tanque.</p>
-      {% endif %}
-          {% endfor %}
-    
+    </table> 
 {% endblock content %}
