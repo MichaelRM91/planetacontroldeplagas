@@ -142,5 +142,44 @@
         {% endfor %}
 
     </table>
+
+    <p>Campos tanques</p>
+    {% for tanque in tanques %}
+      <p>{{tanque.id}}</p>
+      <p>Ubicacion Tanque :</p>
+      <p>{{tanque.ubicacion_tanque}}</p>
+      <p>Material Tanque :</p>
+      <p>{{tanque.material_tanque}}</p>
+      <p>Unidad de medida Tanque :</p>
+      <p>{{tanque.unidad_medida}}</p>
+      <p>Revestimiento Tanque :</p>
+      <p>{{tanque.revestimiento_tanque}}</p>
+      <p>Estado Interno Tanque :</p>
+      <p>{{tanque.estado_interno_tanque}}</p>
+      <p>Volumen de Almacenamiento Tanque :</p>
+      <p>{{tanque.volumen_almacenamiento}}</p>
+      <p>Estado Tuberias Tanque :</p>
+      <p>{{tanque.estado_tuberias}}</p>
+      <p>Estado Empaques Tanque :</p>
+      <p>{{tanque.estado_empaque}}</p>
+      <p>Hermeticidad Tanque :</p>
+      <p>{{tanque.hermeticidad_tanque}}</p>
+      <p>Observaciones :</p>
+      <p>{{tanque.observaciones}}</p>
+      
+      <p>Otra Ubicacion :</p>
+      {% if tanque.otra_ubicacion_tanque %}
+      <p>{{ tanque.otra_ubicacion_tanque }}</p>
+      {% else %}
+      <p>No existe otra ubicación para este tanque.</p>
+      {% endif %}
+
+      <p>Otro material :</p>
+      {% if tanque.otro_material_tanque %}
+          <p>{{ tanque.otro_material_tanque }}</p>
+      {% else %}
+          <p>No existe otro material para este tanque.</p>
+      {% endif %}
+          {% endfor %}
     
 {% endblock content %}

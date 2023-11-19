@@ -494,22 +494,25 @@ class LavadoDetail(DetailView):
         ctx['servicio_lavado_list'] = ServicioLavadoTanque.objects.filter(servicio=servicio_id) if servicio_id else None
         asignacion = AsignacionServicio.objects.get(servicio_id=servicio_id)
         servicio_lavado = ServicioLavadoTanque.objects.get(servicio=servicio_id)
-        ctx['anexos'] = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado) if servicio_id else None
+        ctx['anexos'] = AnexoImagen.objects.filter(servicio_lavado=servicio_lavado) if servicio_id else None
+        ctx['tanques'] = Tanque.objects.filter(servicio_lavado=servicio_lavado) if servicio_id else None
         tecnico_asignado = asignacion.tecnico
         ctx['tecnico'] = tecnico_asignado
         ctx['infoEmpresas'] = infoEmpresa.objects.get(id=1)
         ctx['firma'] = firmas_servicio_Lavado.objects.filter(servicio_Lavado=servicio_lavado) if servicio_id else None
-        anexo = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado)
+        anexo = AnexoImagen.objects.filter(servicio_lavado=servicio_lavado)
+        tanque = Tanque .objects.filter(servicio_lavado=servicio_lavado)
         print(servicio_id)
-        print(asignacion)
+        print(tanque)
         print(anexo)
+        
         
         
         # Primero, obtén el objeto ServicioLavadoTanque deseado (puedes reemplazar 'id_del_servicio' con el ID real):
         servicio_lavado_tanque = ServicioLavadoTanque.objects.get(servicio=servicio_id)
 
         # Luego, puedes obtener los anexos asociados a este servicio:
-        anexos_del_servicio = AnexoImagen.objects.filter(servicio_Lavado=servicio_lavado_tanque)
+        anexos_del_servicio = AnexoImagen.objects.filter(servicio_lavado=servicio_lavado_tanque)
         
         return ctx
 
