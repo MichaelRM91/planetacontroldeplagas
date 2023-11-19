@@ -82,8 +82,15 @@
                     <tr id="tanques-{{ forloop.counter0 }}" class="hide_all">
                         {{ formss.id }}
                         {% for field in formss.visible_fields %}
-                
-            {% endfor %}
+                        <td>
+                            {{field}}
+                            {% for error in field.errors %}
+                                <span style="color: red">{{ error }}</span>
+                            {% endfor %}
+                            
+                            {% comment %} {{ field.DELETE }} {% endcomment %}
+                        </td>
+                    {% endfor %}
                         <!-- Código para eliminar -->
                         {% if formss.instance.pk %}
                             <td>
