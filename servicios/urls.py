@@ -35,5 +35,8 @@ urlpatterns = [
     path('delete_servicio/<int:servicio_id>/', views.eliminar_servicio, name='delete_servicio'),
     path('guardar_firma_lavado/<int:servicio_id>/', views.guardar_firma_lavado, name='guardar_firma_lavado'),
     path('guardar_firma_fumigacion/<int:servicio_id>/', views.guardar_firma_fumigacion, name='guardar_firma_fumigacion'),
-
+    path('cliente_list/', views.cliente_list, name='cliente_list'),
+    path('crear_cliente/', views.crear_cliente, name='crear_cliente'),
+    path('clientes/editar/<int:pk>/', views.cliente_edit, name='cliente_edit'),
+    path('delete_cliente/<int:cliente_id>/', views.eliminar_cliente, name='delete_cliente'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

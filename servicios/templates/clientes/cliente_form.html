@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Editar cliente{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="card mt-4">
+      <h1 class="card-header">Editar cliente</h1>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% if form.errors %}
+            <div class="alert alert-danger">
+              <ul>
+                {% for field_errors in form.errors %}
+                  {% for error in field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          {% for field in form %}
+            <div class="form-group">
+              {{ field.label_tag }}
+              {% if field.field.widget.input_type == 'date' %}
+                {% render_field field|add_class:"form-control" type="date" %}
+              {% else %}
+                {{ field|add_class:"form-control" }}
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary">Actualizar cliente</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

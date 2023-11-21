@@ -148,6 +148,11 @@ class AsignacionServicioForm(forms.ModelForm):
         empty_label=None,
     )
 
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = ['nit', 'razon_social', 'telefono', 'contacto', 'email', 'direccion', 'user']
+
 class FirmaLavadoForm(forms.ModelForm):
     class Meta:
         model = firmas_servicio_Lavado

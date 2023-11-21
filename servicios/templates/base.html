@@ -25,6 +25,7 @@
                   <li class="nav-item ml-auto">
                       {% if user.is_authenticated and not user.tecnico and not user.cliente_set.exists %}
                         <a class="nav-link" href="{% url 'servicios_list' %}">Servicios</a>
+                        <a class="nav-link" href="{% url 'cliente_list' %}">Cliente</a>
                       {% endif %}
                       {% if user.is_authenticated and user.cliente_set.exists %}
                         <a class="nav-link" href="{% url 'cliente_servicios'%}">Mis Servicios</a>

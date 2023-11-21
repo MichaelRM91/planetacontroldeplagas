@@ -29,6 +29,10 @@ class EstadoServicio(models.Model):
         return reverse('EstadoServicio_detalle', args=[str(self.id)])
 
 class Cliente(models.Model):
+    ESTADO_CHOICES = (
+        ('activo', 'Activo'),
+        ('no_activo', 'No Activo'),
+    )
     nit = models.IntegerField()
     razon_social = models.CharField(max_length=100)
     telefono = models.CharField(max_length=15)
@@ -36,7 +40,8 @@ class Cliente(models.Model):
     email = models.EmailField()
     direccion = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='activo')
+    
     def __str__(self):
         return self.razon_social
 

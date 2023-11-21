@@ -27,7 +27,9 @@ from .forms import (
     ServicioFumigacionRecomendacionesFormSet,
     ServicioFumigacionPrecaucionesFormSet,
     ServicioLavadoTanqueAnexosFormset,
-    FirmaLavadoForm, FirmaFumigacionForm, ServicioLavadoTanqueFormset
+    FirmaLavadoForm, FirmaFumigacionForm, ServicioLavadoTanqueFormset,
+    ClienteForm
+
 )
 
 from django.views import View
@@ -546,7 +548,53 @@ def cliente_servicios(request):
     return render(request, 'servicios/servicios_client.html', {
         'servicios': servicios
     })
-    
+
+@login_required
+def cliente_list(request):
+    clientes = Cliente.objects.filter(estado='activo').order_by('-id')
+    print(clientes)
+    return render(request, 'clientes/cliente_list.html', {'clientes': clientes})
+   
+@login_required
+def crear_cliente(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.instance.estado = 'activo'
+            form.save()
+            messages.success(request, "El cliente se ha creado exitosamente.")
+            return redirect('cliente_list')
+        else:
+            messages.error(
+                request,
+                "Ha ocurrido un error al crear el cliente. Por favor, revise los campos e inténtelo nuevamente.",
+            )
+    else:
+        form = ClienteForm()
+
+    return render(request, 'clientes/crear_cliente.html', {'form': form})
+
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
+def cliente_edit(request, pk):
+    clientes = Cliente.objects.get(pk=pk)
+    if request.method == "POST":
+        form = ClienteForm(request.POST, instance=clientes)
+        if form.is_valid():
+            clientes = form.save()
+            return redirect("cliente_list")
+    else:
+        form = ClienteForm(instance=clientes)
+    return render(
+        request, "clientes/cliente_form.html", {"form": form, "clientes": clientes}
+    )
+
+def eliminar_cliente(request, cliente_id):
+    cliente = Cliente.objects.get(id=cliente_id)
+    cliente.estado = 'no_activo'
+    cliente.save()
+    messages.success(request, "El cliente se ha marcado como inactivo.")
+    return redirect('cliente_list')
+
 @login_required
 def welcome_view(request):
     return render(request, 'home.html')
