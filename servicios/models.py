@@ -10,6 +10,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class TipoServicio(models.Model):
+    
+    class Meta:        
+        verbose_name_plural = "Tipo de Servicios"
+    
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
 
@@ -20,6 +24,8 @@ class TipoServicio(models.Model):
         return reverse('TipoServicio_detalle', args=[str(self.id)])
     
 class EstadoServicio(models.Model):
+    class Meta:        
+        verbose_name_plural = "Estado de los Servicios"
     nombre = models.CharField(max_length=200)
     
     def __str__(self):
@@ -29,6 +35,8 @@ class EstadoServicio(models.Model):
         return reverse('EstadoServicio_detalle', args=[str(self.id)])
 
 class Cliente(models.Model):
+    class Meta:        
+        verbose_name_plural = "Lista de Clientes"
     ESTADO_CHOICES = (
         ('activo', 'Activo'),
         ('no_activo', 'No Activo'),
@@ -46,6 +54,8 @@ class Cliente(models.Model):
         return self.razon_social
 
 class Servicio(models.Model):
+    class Meta:        
+        verbose_name_plural = "Lista de Servicios"
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     tipo_servicio = models.ForeignKey(
         TipoServicio, on_delete=models.SET_NULL, null=True)
@@ -62,12 +72,16 @@ class Servicio(models.Model):
         return reverse('servicio_detalle', args=[str(self.id)])
 
 class Evidencia(models.Model):
+    class Meta:        
+        verbose_name_plural = "Evidencias del Servicio"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
 
 class Medida(models.Model):
+    class Meta:        
+        verbose_name_plural = "Tipos de Medida"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
@@ -79,6 +93,8 @@ class UnidadMedida(models.Model):
         return self.nombre
     
 class Producto(models.Model):
+    class Meta:        
+        verbose_name_plural = "Tipos de Producto"
     nombre = models.CharField(max_length=200)
 
 
@@ -88,12 +104,16 @@ class Producto(models.Model):
 
 
 class LugaresATratar(models.Model):
+    class Meta:        
+        verbose_name_plural = "Lista de Lugares Tratados por Servicio"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
 
 class TipoControlImplementado(models.Model):
+    class Meta:        
+        verbose_name_plural = "Tipo de Control Implementado"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
@@ -101,6 +121,8 @@ class TipoControlImplementado(models.Model):
     
     
 class ServicioFumigacion(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Servicio Fumigacion"
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_fumigacion')
     lugares_tratados = models.ManyToManyField(LugaresATratar, blank=True)
     tipo_control_implementado = models.ManyToManyField(TipoControlImplementado, blank=True)
@@ -115,18 +137,24 @@ class ServicioFumigacion(models.Model):
     
 
 class Precauciones(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Precauciones"
     descripcion = models.CharField(max_length=200)
     
     def __str__(self):
         return self.descripcion
     
 class Recomendaciones(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Recomendaciones"
     descripcion = models.CharField(max_length=200)
     
     def __str__(self):
         return self.descripcion
     
 class ServicioRecomendacion(models.Model):
+    class Meta:        
+        verbose_name_plural = "Recomenaciondes por Servicio"
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE)
     recomendacion = models.ForeignKey(Recomendaciones, on_delete=models.CASCADE)
 
@@ -135,6 +163,8 @@ class ServicioRecomendacion(models.Model):
 
 
 class ServicioPrecaucion(models.Model):
+    class Meta:        
+        verbose_name_plural = "Precauciones por Servicio"
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE)
     precaucion = models.ForeignKey(Precauciones, on_delete=models.CASCADE)
 
@@ -142,12 +172,16 @@ class ServicioPrecaucion(models.Model):
         return f"Servicio: {self.servicio_fumigacion}, Precauciones: {self.precaucion}"
 
 class UbicacionRev(models.Model):
+    class Meta:        
+        verbose_name_plural = "Ubicacion Rev"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
 
 class EvidenciaMedida(models.Model):
+    class Meta:        
+        verbose_name_plural = "Evidencia"
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE, related_name='evidencias_medidas')
     evidencia = models.ForeignKey(Evidencia, on_delete=models.CASCADE)
     medida = models.ForeignKey(Medida, on_delete=models.CASCADE)
@@ -157,12 +191,16 @@ class EvidenciaMedida(models.Model):
         return f"{self.evidencia} - {self.medida}- {self.ubicacion}"
     
 class CategoriaToxicologica(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Categorias Toxicologicas"
     nombre = models.CharField(max_length=200)
     
     def __str__(self):
         return self.nombre
     
 class ProductoUtilizado(models.Model):
+    class Meta:        
+        verbose_name_plural = "Productos Utilizados por Servicio"
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE, related_name='productos_utilizados')
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)
@@ -173,48 +211,64 @@ class ProductoUtilizado(models.Model):
         return f"{self.producto} - {self.cantidad} {self.unidad_medida}"
 
 class UbicacionTanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Ubicaciones del Tanque"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
     
 class MaterialTanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Materiales del Tanque"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
     
 class UnidadMedidaTanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de las Medidas de Tanque"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
     
 class EstadoInternoTanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado del Estado Interno del Tanque"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
     
 class RevestimientoTanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado del Revestimiento del Tanque"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
     
 class EstadoTuberias(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Estados de las Tuberias"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
     
 class EstadoEmpaques(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Estado de los Empaques"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return self.nombre
     
 class HermeticidadTanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de la Hermeticidad del Tanque"
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
@@ -223,11 +277,15 @@ class HermeticidadTanque(models.Model):
 
 
 class ServicioLavadoTanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Servicios de Lavado de Tanque"
     servicio = models.OneToOneField(Servicio, on_delete=models.CASCADE, related_name='servicio_lavado_tanque')
     def __str__(self):
         return f"Servicio de Lavado Tanque: {self.servicio.id}"
     
 class Tanque(models.Model):
+    class Meta:        
+        verbose_name_plural = "Tanque"
     servicio_lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE)
     ubicacion_tanque = models.ForeignKey(UbicacionTanque, on_delete=models.CASCADE, null=True, blank=True)
     material_tanque = models.ForeignKey(MaterialTanque, on_delete=models.CASCADE, null=True, blank=True)
@@ -248,6 +306,8 @@ class Tanque(models.Model):
         return f"Tanque ID: {self.id}"
     
 class AnexoImagen(models.Model):
+    class Meta:        
+        verbose_name_plural = "Anexos por Servicio Lavado"
     servicio_lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE, default=20)
     imagen = models.ImageField(upload_to='media/anexoImagenes/')
     descripcion = models.TextField()
@@ -256,6 +316,8 @@ class AnexoImagen(models.Model):
         return self.descripcion
 
 class Tecnico(models.Model):
+    class Meta:        
+        verbose_name_plural = "Listado de Tecnicos"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Otros campos relevantes para los técnicos, como nombre, apellidos, etc.
 
@@ -263,6 +325,8 @@ class Tecnico(models.Model):
         return self.user.username
     
 class AsignacionServicio(models.Model):
+    class Meta:        
+        verbose_name_plural = "Servicios Asignados"
     servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE)
     tecnico = models.ForeignKey(Tecnico, on_delete=models.CASCADE)
     fecha_asignacion = models.DateTimeField(auto_now_add=True)
@@ -294,6 +358,8 @@ class AsignacionServicio(models.Model):
         
         
 class infoEmpresa(models.Model):
+    class Meta:        
+        verbose_name_plural = "Informacion de la Empresa"
     nit = models.CharField(max_length=150)
     direccion = models.CharField(max_length=150)
     telefono = models.CharField(max_length=150)
@@ -309,10 +375,14 @@ class infoEmpresa(models.Model):
     procedimiento_basico = models.CharField(max_length=1000)
     
 class firmas_servicio_Lavado(models.Model):
+    class Meta:        
+        verbose_name_plural = "Firmas de Servicio Lavado"
     servicio_Lavado = models.ForeignKey(ServicioLavadoTanque, on_delete=models.CASCADE, default=20, unique=True)
     imagen = models.ImageField(upload_to='media/firmas_lavado/')
    
 class firmas_servicio_fumigacion(models.Model):
+    class Meta:        
+        verbose_name_plural = "Firmas de Servicio Fumigacion"
     servicio_fumigacion = models.ForeignKey(ServicioFumigacion, on_delete=models.CASCADE, default=20, unique=True)
     imagen = models.ImageField(upload_to='media/firmas_fumigacion/')
     

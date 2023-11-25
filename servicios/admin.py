@@ -8,10 +8,14 @@ class infoEmpresaAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.CharField: {'widget': forms.TextInput(attrs={'style': 'width: 40em;'})},
     }
+    
+class ClienteAdmin(admin.ModelAdmin):
+    list_display = ['nit', 'razon_social', 'telefono', 'contacto', 'email', 'direccion', 'estado']
+    search_fields = ['nit', 'razon_social', 'telefono', 'contacto', 'email', 'direccion', 'estado']
 
 # Register your models here.
 admin.site.register(TipoServicio)
-admin.site.register(Cliente)
+admin.site.register(Cliente, ClienteAdmin)
 admin.site.register(Evidencia)
 admin.site.register(Medida)
 admin.site.register(Producto)
