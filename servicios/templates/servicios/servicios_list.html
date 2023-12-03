@@ -3,16 +3,27 @@
 {% block content %}
 <div class="container">
   <h1 class="my-5">Lista de Servicios</h1>
-  <a href="{% url 'crear_servicio' %}" class="btn btn-primary mb-3">Agregar servicio</a>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'crear_servicio' %}" class="btn btn-primary">Agregar servicio</a>
+    <div class="mr-4 search" style="width: 300px;">
+      <input type="text" class="form-control w-100" id="search-input" placeholder="Buscar...">
+    </div>
+  </div>
   {% comment %} ESTILO PARA EL CARD {% endcomment %}
   <div class="card-container">
     {% for servicio in servicios %}
-      <div class="card text-center">
+    <div class="card text-center">
         <div class="card-body">
           <h5 class="card-title">ID: {{ servicio.id }}</h5>
           <p class="card-text">Nombre: {{ servicio.cliente }}</p>
           <p class="card-text">Tipo de Servicio: {{ servicio.tipo_servicio }}</p>
-          <p class="card-text">Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
+          {% if servicio.fecha_ejecucion < today_date %}
+            <p class="card-text" style="color: red;">Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
+          {% elif servicio.fecha_ejecucion <= five_days_later %}
+            <p class="card-text" style="color: orange;">Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
+          {% else %}
+            <p class="card-text" style="color: green;">Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
+          {% endif %}
           <p class="card-text">Creado Por: {{ servicio.usuario }}</p>
           <p class="card-text">Estado Servicio: {{ servicio.estado_servicio }}</p>
 
@@ -53,7 +64,13 @@
           <td>{{ servicio.id }}</td>
           <td>{{ servicio.cliente }}</td>
           <td>{{ servicio.tipo_servicio }}</td>
-          <td>{{ servicio.fecha_ejecucion }}</td>
+          {% if servicio.fecha_ejecucion <= today_date %}
+          <td class="card-text" style="color: red;">{{ servicio.fecha_ejecucion }}</td>
+          {% elif servicio.fecha_ejecucion <= five_days_later %}
+          <td class="card-text" style="color: orange;">{{ servicio.fecha_ejecucion }}</td>
+          {% else %}
+          <td class="card-text" style="color: green;">{{ servicio.fecha_ejecucion }}</td>
+          {% endif %}
           <td>{{ servicio.usuario }}</td>
           <td>{{ servicio.estado_servicio}}</td>
           <td>{{ servicio.asignacionservicio_set.last.tecnico | default:"Sin asignar" }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}

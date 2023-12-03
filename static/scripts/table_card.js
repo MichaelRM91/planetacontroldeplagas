@@ -17,3 +17,22 @@ function toggleElements() {
   // Ejecutar la función al cargar la página y al redimensionar la ventana
   window.addEventListener('load', toggleElements);
   window.addEventListener('resize', toggleElements);
+
+//Buscar para tabla
+$(document).ready(function () {
+  $("#search-input").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $("table tbody tr").filter(function () {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
+  });
+});
+//Buscar para tarjetas
+$(document).ready(function () {
+  $("#search-input").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $(".card-container .card").filter(function () {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+    });
+  });
+});

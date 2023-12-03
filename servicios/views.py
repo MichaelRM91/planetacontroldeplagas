@@ -14,7 +14,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Servicio, ServicioFumigacion, ServicioLavadoTanque
 from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
-
+from datetime import date, timedelta
 from .models import *
 
 from .forms import (
@@ -41,10 +41,11 @@ from django.http import JsonResponse
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicios_list(request):
-    servicios = Servicio.objects.exclude(estado_servicio__in=[2, 4]).order_by('-id')
-    print(servicios)
+    today_date = date.today()
+    five_days_later = today_date + timedelta(days=5)
+    servicios = Servicio.objects.exclude(estado_servicio__in=[2, 4]).order_by('fecha_ejecucion')
     form = AsignacionServicioForm(request.POST)
-    return render(request, "servicios/servicios_list.html", {"servicios": servicios, "form": form})
+    return render(request, "servicios/servicios_list.html", {"servicios": servicios, "form": form, "today_date": today_date,"five_days_later": five_days_later})
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def servicio_nuevo(request):
@@ -145,7 +146,6 @@ def reasignar_servicio(request, servicio_id):
     servicio = Servicio.objects.get(id=servicio_id)
     servicio.estado_servicio = nuevo_estado
     servicio.save()
-    print(servicio.estado_servicio.nombre)
     return redirect('servicios_list')
 
 
@@ -504,9 +504,6 @@ class LavadoDetail(DetailView):
         ctx['firma'] = firmas_servicio_Lavado.objects.filter(servicio_Lavado=servicio_lavado) if servicio_id else None
         anexo = AnexoImagen.objects.filter(servicio_lavado=servicio_lavado)
         tanque = Tanque .objects.filter(servicio_lavado=servicio_lavado)
-        print(servicio_id)
-        print(tanque)
-        print(anexo)
         
         
         
@@ -552,7 +549,6 @@ def cliente_servicios(request):
 @login_required
 def cliente_list(request):
     clientes = Cliente.objects.filter(estado='activo').order_by('-id')
-    print(clientes)
     return render(request, 'clientes/cliente_list.html', {'clientes': clientes})
    
 @login_required

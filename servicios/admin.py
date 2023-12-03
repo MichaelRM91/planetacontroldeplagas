@@ -12,6 +12,11 @@ class infoEmpresaAdmin(admin.ModelAdmin):
 class ClienteAdmin(admin.ModelAdmin):
     list_display = ['nit', 'razon_social', 'telefono', 'contacto', 'email', 'direccion', 'estado']
     search_fields = ['nit', 'razon_social', 'telefono', 'contacto', 'email', 'direccion', 'estado']
+    formfield_overrides = {
+        models.CharField: {'widget': forms.TextInput(attrs={'style': 'width: 40em;'})},
+        models.IntegerField: {'widget': forms.TextInput(attrs={'style': 'width: 40em;'})},
+        models.ForeignKey: {'widget': forms.Select(attrs={'style': 'width: 40em;'})},
+    }
 
 # Register your models here.
 admin.site.register(TipoServicio)

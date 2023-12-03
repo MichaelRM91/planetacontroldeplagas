@@ -35,7 +35,11 @@ class ServicioForm(forms.ModelForm):
     fecha_ejecucion = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
     fecha_vencimiento = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
 
-
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Establecemos el límite de fecha mínima para evitar seleccionar días pasados
+            self.fields['fecha_ejecucion'].widget.attrs['min'] = timezone.now().strftime('%Y-%m-%d')
+            self.fields['fecha_vencimiento'].widget.attrs['min'] = timezone.now().strftime('%Y-%m-%d')
 class EvidenciaMedidaForm(forms.ModelForm):
     class Meta:
         model = EvidenciaMedida
