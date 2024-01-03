@@ -20,7 +20,7 @@
           <p class="card-text">Contacto: {{ cliente.contacto }}</p>
           <p class="card-text">Email: {{ cliente.email }}</p>
           <p class="card-text">Direccion: {{ cliente.direccion}}</p>
-          <p class="card-text">Creado Por: {{ cliente.user}}</p>
+          <p class="card-text">Creado Por: {{ cliente.created_by}}</p>
 
           <div class="form-buttons">
             <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
@@ -56,7 +56,7 @@
           <td>{{ cliente.contacto }}</td>
           <td>{{ cliente.email }}</td>
           <td>{{ cliente.direccion}}</td>
-          <td>{{ cliente.user}}</td>
+          <td>{{ cliente.created_by}}</td>
           <td>
             <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
             <a href="{% url 'delete_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>

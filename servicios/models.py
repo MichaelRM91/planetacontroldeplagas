@@ -44,10 +44,11 @@ class Cliente(models.Model):
     nit = models.IntegerField()
     razon_social = models.CharField(max_length=100)
     telefono = models.CharField(max_length=15)
-    contacto = models.CharField(max_length=15)
+    contacto = models.CharField(max_length=200)
     email = models.EmailField()
     direccion = models.CharField(max_length=200)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientes_asociados')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='usuario_creador')
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='activo')
     
     def __str__(self):

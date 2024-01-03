@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
 from django.views.generic.edit import (
     CreateView, UpdateView
@@ -40,6 +40,7 @@ from django.http import JsonResponse
 # Create your views here.
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
+@user_passes_test(lambda user: user.is_superuser)
 def servicios_list(request):
     today_date = date.today()
     five_days_later = today_date + timedelta(days=5)
@@ -556,8 +557,10 @@ def crear_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST)
         if form.is_valid():
-            form.instance.estado = 'activo'
-            form.save()
+            cliente = form.save(commit=False)
+            cliente.created_by = request.user  # Asignar el usuario en sesión al campo 'created_by'
+            cliente.estado = 'activo'
+            cliente.save()
             messages.success(request, "El cliente se ha creado exitosamente.")
             return redirect('cliente_list')
         else:
@@ -570,12 +573,15 @@ def crear_cliente(request):
 
     return render(request, 'clientes/crear_cliente.html', {'form': form})
 
+@user_passes_test(lambda user: user.is_superuser)
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def cliente_edit(request, pk):
     clientes = Cliente.objects.get(pk=pk)
     if request.method == "POST":
         form = ClienteForm(request.POST, instance=clientes)
         if form.is_valid():
+            cliente = form.save(commit=False)
+            cliente.created_by = request.user  
             clientes = form.save()
             return redirect("cliente_list")
     else:
@@ -584,6 +590,7 @@ def cliente_edit(request, pk):
         request, "clientes/cliente_form.html", {"form": form, "clientes": clientes}
     )
 
+@user_passes_test(lambda user: user.is_superuser)
 def eliminar_cliente(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     cliente.estado = 'no_activo'
@@ -595,6 +602,7 @@ def eliminar_cliente(request, cliente_id):
 def welcome_view(request):
     return render(request, 'home.html')
 
+@user_passes_test(lambda user: user.is_superuser)
 def eliminar_servicio(request, servicio_id):
     servicio = Servicio.objects.get(id=servicio_id)
     servicio.estado_servicio_id = 4
