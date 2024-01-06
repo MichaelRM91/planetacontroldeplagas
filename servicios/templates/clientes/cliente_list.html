@@ -23,6 +23,12 @@
           <p class="card-text">Email: {{ cliente.email }}</p>
           <p class="card-text">Direccion: {{ cliente.direccion}}</p>
           <p class="card-text">Creado Por: {{ cliente.created_by}}</p>
+          <p class="card-text">
+            <i class="fa-brands fa-whatsapp"></i>
+            <a href="https://wa.me/{{ cliente.telefono }}" target="_blank">{{ cliente.telefono }}
+            </a>
+          </p>
+          
 
           <div class="form-buttons">
             {% if not request.user.tecnico %}
@@ -56,7 +62,9 @@
         <tr>
           <td>{{ cliente.nit }}</td>
           <td>{{ cliente.razon_social }}</td>
-          <td>{{ cliente.telefono }}</td>
+          <td> <i class="fa-brands fa-whatsapp"></i>
+            <a href="https://wa.me/{{ cliente.telefono }}" target="_blank">{{ cliente.telefono }}
+          </td>
           <td>{{ cliente.contacto }}</td>
           <td>{{ cliente.email }}</td>
           <td>{{ cliente.direccion}}</td>
