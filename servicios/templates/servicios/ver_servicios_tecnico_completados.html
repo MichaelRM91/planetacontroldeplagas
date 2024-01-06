@@ -11,6 +11,7 @@
           <h5 class="card-title">Cliente: {{ asignacion.servicio.cliente.razon_social }}</h5>
           <p class="card-text">Tipo de Servicio: {{ asignacion.servicio.tipo_servicio.nombre }}</p>
           <p class="card-text">Fecha de Ejecución: {{ asignacion.servicio.fecha_ejecucion }}</p>
+          <p class="card-text">Fecha de Inicio: {{ asignacion.servicio.fecha_inicio }}</p>
           <p class="card-text">Estado del Servicio: {{ asignacion.servicio.estado_servicio.nombre }}</p>
           <div class="form-buttons">
             {% if asignacion.servicio.tipo_servicio.nombre == 'Fumigacion' %}
@@ -34,6 +35,7 @@
         <th>Cliente</th>
         <th>Tipo de Servicio</th>
         <th>Fecha de Ejecución</th>
+        <th>Fecha de Inicio</th>
         <th>Estado del Servicio</th>
         <th>Certificado</th>
       </tr>
@@ -44,6 +46,7 @@
         <td>{{ asignacion.servicio.cliente.razon_social }}</td>
         <td>{{ asignacion.servicio.tipo_servicio.nombre }}</td>
         <td>{{ asignacion.servicio.fecha_ejecucion }}</td>
+        <td>{{ asignacion.servicio.fecha_inicio }}</td>
         <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
         <td>
           {% if asignacion.servicio.tipo_servicio.nombre == 'Fumigacion' %}

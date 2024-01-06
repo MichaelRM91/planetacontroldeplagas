@@ -29,9 +29,6 @@ class ServicioForm(forms.ModelForm):
     )
     fecha_ejecucion = forms.DateField(label="Fecha de Ejecución")
     fecha_vencimiento = forms.DateField(label="Fecha de Vencimiento")
-    usuario = forms.ModelChoiceField(
-        label="Usuario", queryset=User.objects.all(), empty_label=None
-    )
     fecha_ejecucion = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
     fecha_vencimiento = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
 

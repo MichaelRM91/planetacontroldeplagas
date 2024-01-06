@@ -39,4 +39,5 @@ urlpatterns = [
     path('crear_cliente/', views.crear_cliente, name='crear_cliente'),
     path('clientes/editar/<int:pk>/', views.cliente_edit, name='cliente_edit'),
     path('delete_cliente/<int:cliente_id>/', views.eliminar_cliente, name='delete_cliente'),
+    path('iniciar_servicio/<int:servicio_id>/', views.iniciar_servicio, name='iniciar_servicio'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

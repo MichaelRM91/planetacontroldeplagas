@@ -12,7 +12,6 @@
           <p class="card-text">Nombre: {{ servicio.cliente }}</p>
           <p class="card-text">Tipo de Servicio: {{ servicio.tipo_servicio }}</p>
           <p class="card-text">Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
-          <p class="card-text">Creado Por: {{ servicio.usuario }}</p>
           <p class="card-text">Estado Servicio: {{ servicio.estado_servicio }}</p>
 
           <div class="form-buttons">
@@ -32,8 +31,8 @@
           <th>ID</th>
           <th>Nombre</th>
           <th>Tipo Servicio</th>
+          <th>Fecha De Inicio</th>
           <th>Fecha Ejecucion</th>
-          <th>Creado Por</th>
           <th>Estado Servicio</th>
           <th>Asignado a</th>
           <th>Asignacion</th>
@@ -45,8 +44,8 @@
           <td>{{ servicio.id }}</td>
           <td>{{ servicio.cliente }}</td>
           <td>{{ servicio.tipo_servicio }}</td>
+          <td>{{ servicio.fecha_inicio }}</td>
           <td>{{ servicio.fecha_ejecucion }}</td>
-          <td>{{ servicio.usuario }}</td>
           <td>{{ servicio.estado_servicio}}</td>
           <td>{{ servicio.asignacionservicio_set.last.tecnico | default:"Sin asignar" }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}
           <td>

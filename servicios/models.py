@@ -58,8 +58,8 @@ class Servicio(models.Model):
     class Meta:        
         verbose_name_plural = "Lista de Servicios"
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    tipo_servicio = models.ForeignKey(
-        TipoServicio, on_delete=models.SET_NULL, null=True)
+    tipo_servicio = models.ForeignKey(TipoServicio, on_delete=models.SET_NULL, null=True)
+    fecha_inicio = models.DateTimeField(null=True)
     fecha_ejecucion = models.DateField()
     fecha_vencimiento = models.DateField()
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)

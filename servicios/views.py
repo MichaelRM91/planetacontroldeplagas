@@ -636,3 +636,13 @@ def guardar_firma_fumigacion(request, servicio_id):
     else:
         form = FirmaFumigacionForm()
     return redirect('details_product', servicio_id=servicio_id)
+
+
+def iniciar_servicio(request, servicio_id):
+    servicio = get_object_or_404(Servicio, pk=servicio_id)
+
+    # Verifica que el servicio aún no haya sido iniciado
+    if not servicio.fecha_inicio:
+        servicio.fecha_inicio = timezone.now()
+        servicio.save()
+    return redirect('ver_servicios_tecnico')
