@@ -4,7 +4,9 @@
 <div class="container">
   <h1 class="my-5">Lista de Clientes</h1>
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <a href="{% url 'crear_cliente' %}" class="btn btn-primary">Crear Cliente</a>
+    {% if not request.user.tecnico %}
+      <a href="{% url 'crear_cliente' %}" class="btn btn-primary">Crear Cliente</a>
+    {% endif %}
     <div class="mr-4 search" style="width: 300px;">
       <input type="text" class="form-control w-100" id="search-input" placeholder="Buscar...">
     </div>
@@ -23,8 +25,10 @@
           <p class="card-text">Creado Por: {{ cliente.created_by}}</p>
 
           <div class="form-buttons">
-            <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
-            <a href="{% url 'delete_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            {% if not request.user.tecnico %}
+              <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
+              <a href="{% url 'delete_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -58,8 +62,10 @@
           <td>{{ cliente.direccion}}</td>
           <td>{{ cliente.created_by}}</td>
           <td>
-            <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
-            <a href="{% url 'delete_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            {% if not request.user.tecnico %}
+              <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
+              <a href="{% url 'delete_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            {% endif %}
           </td>
         </tr>
         {% empty %}

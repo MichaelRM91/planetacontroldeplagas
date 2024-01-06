@@ -24,7 +24,6 @@
           {% else %}
             <p class="card-text" style="color: green;">Fecha de Ejecución: {{ servicio.fecha_ejecucion }}</p>
           {% endif %}
-          <p class="card-text">Creado Por: {{ servicio.usuario }}</p>
           <p class="card-text">Estado Servicio: {{ servicio.estado_servicio }}</p>
 
           <div class="form-buttons">
@@ -51,7 +50,6 @@
           <th>Nombre</th>
           <th>Tipo Servicio</th>
           <th>Fecha Ejecucion</th>
-          <th>Creado Por</th>
           <th>Estado Servicio</th>
           <th>Asignado a</th>
           <th>Asignacion</th>
@@ -71,7 +69,6 @@
           {% else %}
           <td class="card-text" style="color: green;">{{ servicio.fecha_ejecucion }}</td>
           {% endif %}
-          <td>{{ servicio.usuario }}</td>
           <td>{{ servicio.estado_servicio}}</td>
           <td>{{ servicio.asignacionservicio_set.last.tecnico | default:"Sin asignar" }}</td> {% comment %}obtener datos de dos tablas relacionadas {% endcomment %}
           <td>
