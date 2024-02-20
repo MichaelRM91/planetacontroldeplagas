@@ -25,7 +25,7 @@
           <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
                   <li class="nav-item ml-auto">
-                      {% if user.is_authenticated and user.is_staff %}
+                      {% if user.is_authenticated and user.is_superuser %}
                         <a class="nav-link" href="{% url 'servicios_list' %}">Servicios</a>
                       {% endif %}
                       {% if user.is_authenticated and user.tecnico or user.is_staff  %}

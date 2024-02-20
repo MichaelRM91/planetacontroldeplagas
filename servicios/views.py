@@ -573,7 +573,7 @@ def crear_cliente(request):
 
     return render(request, 'clientes/crear_cliente.html', {'form': form})
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def cliente_edit(request, pk):
     clientes = Cliente.objects.get(pk=pk)
@@ -590,7 +590,7 @@ def cliente_edit(request, pk):
         request, "clientes/cliente_form.html", {"form": form, "clientes": clientes}
     )
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def eliminar_cliente(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     cliente.estado = 'no_activo'
@@ -602,7 +602,7 @@ def eliminar_cliente(request, cliente_id):
 def welcome_view(request):
     return render(request, 'home.html')
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def eliminar_servicio(request, servicio_id):
     servicio = Servicio.objects.get(id=servicio_id)
     servicio.estado_servicio_id = 4

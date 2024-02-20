@@ -4,7 +4,7 @@
 <div class="container">
   <h1 class="my-5">Lista de Clientes</h1>
   <div class="d-flex justify-content-between align-items-center mb-3">
-    {% if not request.user.tecnico %}
+    {% if request.user.is_staff %}
       <a href="{% url 'crear_cliente' %}" class="btn btn-primary">Crear Cliente</a>
     {% endif %}
     <div class="mr-4 search" style="width: 300px;">
@@ -31,7 +31,7 @@
           
 
           <div class="form-buttons">
-            {% if not request.user.tecnico %}
+            {% if request.user.is_staff %}
               <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
               <a href="{% url 'delete_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
             {% endif %}
@@ -70,7 +70,7 @@
           <td>{{ cliente.direccion}}</td>
           <td>{{ cliente.created_by}}</td>
           <td>
-            {% if not request.user.tecnico %}
+            {% if request.user.is_staff %}
               <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
               <a href="{% url 'delete_cliente' cliente.id %}" class="btn btn-sm btn-danger">Eliminar</a>
             {% endif %}
