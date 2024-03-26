@@ -24,7 +24,7 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav ms-auto">
-                  <li class="nav-item ml-auto">
+                  <li class="nav-item ml-auto" style="display: flex; justify-content: flex-end;">
                       {% if user.is_authenticated and user.is_superuser %}
                         <a class="nav-link" href="{% url 'servicios_list' %}">Servicios</a>
                       {% endif %}
