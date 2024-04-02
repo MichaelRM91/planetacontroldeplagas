@@ -150,6 +150,11 @@ class AsignacionServicioForm(forms.ModelForm):
     )
 
 class ClienteForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:  # Verifica si se está editando un registro existente
+            del self.fields['user']  # Si es así, elimina el campo 'user' del formulario
+            
     user = forms.ModelChoiceField(
         label='Usuario para el Cliente',
         queryset=User.objects.filter(
