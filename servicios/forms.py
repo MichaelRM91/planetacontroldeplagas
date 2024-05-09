@@ -150,23 +150,9 @@ class AsignacionServicioForm(forms.ModelForm):
     )
 
 class ClienteForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:  # Verifica si se está editando un registro existente
-            del self.fields['user']  # Si es así, elimina el campo 'user' del formulario
-            
-    user = forms.ModelChoiceField(
-        label='Usuario para el Cliente',
-        queryset=User.objects.filter(
-            clientes_asociados__isnull=True,  # Filtra usuarios no asociados a un cliente
-            tecnico__isnull=True,  # Filtra usuarios no asociados a un técnico
-            is_superuser=False
-        )
-    )
-
     class Meta:
         model = Cliente
-        fields = ['nit', 'razon_social', 'telefono', 'contacto', 'email', 'direccion', 'user']
+        fields = ['nit', 'razon_social', 'telefono', 'contacto', 'email', 'direccion']
 
 class FirmaLavadoForm(forms.ModelForm):
     class Meta:

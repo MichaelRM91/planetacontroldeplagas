@@ -31,9 +31,15 @@
                       {% if user.is_authenticated and user.tecnico or user.is_staff  %}
                           <a class="nav-link" href="{% url 'cliente_list' %}">Clientes</a>
                         {% endif %}
-                      {% if user.is_authenticated and user.clientes_asociados %}
-                        <a class="nav-link" href="{% url 'cliente_servicios'%}">Mis Servicios</a>
+            
+                      {% if user.is_authenticated %}
+                          {% if not user.is_superuser %}
+                            {% if not user.tecnico %}
+                              <a class="nav-link" href="{% url 'cliente_servicios'%}">Mis Servicios</a>
+                            {% endif %}
+                          {% endif %}
                       {% endif %}
+
                       {% if user.is_authenticated and user.tecnico %}
                         <a class="nav-link" href="{% url 'ver_servicios_tecnico' %}">Asignados</a>
                         <a class="nav-link" href="{% url 'ver_servicios_completados' %}">Completados</a>
