@@ -540,7 +540,8 @@ def user_logout(request):
 
 @login_required
 def cliente_servicios(request):
-    cliente = Cliente.objects.get(user=request.user)
+    usuario_cliente = UsuarioCliente.objects.get(user=request.user)
+    cliente = usuario_cliente.cliente   
     servicios = Servicio.objects.filter(cliente=cliente, estado_servicio=2).order_by('-id')
 
     return render(request, 'servicios/servicios_client.html', {

@@ -64,3 +64,20 @@ class AsignacionServicioAdmin(admin.ModelAdmin):
 
 admin.site.register(AsignacionServicio, AsignacionServicioAdmin)
 
+class UsuarioClienteForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Filtrar los usuarios que no están asociados a ningún cliente
+        usuarios_cliente = list(UsuarioCliente.objects.all().values_list('user_id', flat=True))
+        usuarios_tecnico = list(Tecnico.objects.all().values_list('user_id', flat=True))
+        usuarios_superusuario = list(User.objects.filter(is_superuser=True).values_list('id', flat=True))  
+        
+        usuarios_asociados = usuarios_cliente + usuarios_tecnico + usuarios_superusuario
+        
+        self.fields['user'].queryset = User.objects.exclude(id__in=usuarios_asociados)
+
+class UsuarioClienteAdmin(admin.ModelAdmin):
+    form = UsuarioClienteForm
+
+admin.site.register(UsuarioCliente, UsuarioClienteAdmin)

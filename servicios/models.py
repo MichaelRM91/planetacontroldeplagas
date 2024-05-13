@@ -47,12 +47,18 @@ class Cliente(models.Model):
     contacto = models.CharField(max_length=200)
     email = models.EmailField()
     direccion = models.CharField(max_length=200)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientes_asociados')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='usuario_creador')
     estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='activo')
     
     def __str__(self):
         return self.razon_social
+    
+class UsuarioCliente(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='usuarios')
+
+    def __str__(self):
+        return self.user.username
 
 class Servicio(models.Model):
     class Meta:        
