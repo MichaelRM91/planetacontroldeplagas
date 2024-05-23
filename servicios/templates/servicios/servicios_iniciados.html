@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1 class="my-5">Servicios Asignados</h1>
+  {% comment %} ESTILO PARA EL CARD {% endcomment %}
+  <div class="card-container">
+    {% for asignacion in servicios_asignados %}
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Cliente: {{ asignacion.servicio.cliente.razon_social }}</h5>
+          <p class="card-text">Tipo de Servicio: {{ asignacion.servicio.tipo_servicio.nombre }}</p>
+          <p class="card-text">Fecha de Ejecución: {{ asignacion.servicio.fecha_ejecucion }}</p>
+          <p class="card-text">Estado del Servicio: {{ asignacion.servicio.estado_servicio.nombre }}</p>
+
+          <div class="form-buttons">
+            {% if asignacion.servicio.tipo_servicio.nombre == "Fumigacion" %}
+              {% if asignacion.servicio.servicio_fumigacion %}
+                <a href="{% url 'update_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
+              {% else %}
+                <a href="{% url 'create_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+              {% endif %}
+            {% endif %}
+
+            {% if asignacion.servicio.tipo_servicio.nombre == "Lavado de Tanques" %}
+              <a href="{% url 'create_lavado' asignacion.servicio.id %}" class="btn btn-success btn-sm">Generar</a>
+            {% endif %}
+            <form method="post" style="display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="servicio_id" value="{{ asignacion.servicio.id }}">
+              <input type="submit" class="btn btn-success btn-sm" value="Completado">
+            </form>
+
+            {% if not asignacion.servicio.fecha_inicio %}
+              <a href="{% url 'iniciar_servicio' asignacion.servicio.id %}" class="btn btn-info btn-sm">Iniciar Servicio</a>
+            {% else %}
+            <p>Servicio iniciado</p>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No se han asignado servicios a este técnico.</p>
+    {% endfor %}
+  </div>
+  {% comment %} ESTILO PARA LA TABLA {% endcomment %}
+  <table class="table table-striped table-desktop">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Tipo de Servicio</th>
+        <th>Fecha de Ejecución</th>
+        <th>Iniciado por</th>
+        <th>Estado</th>
+        <th>Formulario</th>
+        <th>Completado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asignacion in servicios_asignados %}
+        <tr>
+          <td>{{ asignacion.servicio.cliente.razon_social }}</td>
+          <td>{{ asignacion.servicio.tipo_servicio.nombre }}</td>
+          <td>{{ asignacion.servicio.fecha_ejecucion }}</td>
+          <td>
+            {% if not asignacion.servicio.fecha_inicio %}
+              <a href="{% url 'iniciar_servicio' asignacion.servicio.id %}" class="btn btn-info btn-sm">Iniciar Servicio</a>
+            {% else %}
+            <p> {{ asignacion.tecnico.user.username }} </p>
+            {% endif %}
+          </td>
+          <td>{{ asignacion.servicio.estado_servicio.nombre }}</td>
+
+          <td>
+            {% if asignacion.servicio.tipo_servicio.nombre == "Fumigacion" %}
+              {% if asignacion.servicio.servicio_fumigacion %}
+                <a href="{% url 'update_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
+              {% else %}
+                <a href="{% url 'create_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+              {% endif %}
+            {% endif %}
+
+            {% if asignacion.servicio.tipo_servicio.nombre == "Lavado de Tanques" %}
+              {% if asignacion.servicio.servicio_lavado_tanque %}
+                <a href="{% url 'update_lavado' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
+              {% else %}
+                <a href="{% url 'create_lavado' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+              {% endif %}
+            {% endif %}
+          </td>
+
+          <td>
+            <form method="post" style="display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="servicio_id" value="{{ asignacion.servicio.id }}">
+              <input type="submit" class="btn btn-success btn-sm" value="Completado">
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="6">No se han asignado servicios a este técnico.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

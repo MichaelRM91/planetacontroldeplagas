@@ -15,6 +15,7 @@ from django.http import HttpResponse
 from .models import Servicio, ServicioFumigacion, ServicioLavadoTanque
 from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
 from datetime import date, timedelta
+from django.db.models import OuterRef, Subquery
 from .models import *
 
 from .forms import (
@@ -152,11 +153,17 @@ def reasignar_servicio(request, servicio_id):
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def ver_servicios_tecnico(request):
-    tecnico = request.user.tecnico
-    servicios_asignados = AsignacionServicio.objects.filter(
-    Q(tecnico=tecnico) & Q(servicio__estado_servicio__nombre="Asignado")
-).order_by('-id')
+    # Subconsulta para obtener las asignaciones de servicios más recientes para cada servicio_id
+    subquery = AsignacionServicio.objects.filter(
+        servicio_id=OuterRef('servicio_id'),
+        tecnico=OuterRef('tecnico'),
+        servicio__estado_servicio__nombre__in=["Asignado", "Iniciado"]
+    ).order_by('-fecha_asignacion').values('id')[:1]
 
+    # Obtener las asignaciones de servicios más recientes para cada servicio_id
+    servicios_asignados = AsignacionServicio.objects.filter(
+        id__in=Subquery(subquery)
+    )
 
     if request.method == "POST":
         # Procesar el formulario de marcado como completado
@@ -170,6 +177,34 @@ def ver_servicios_tecnico(request):
     return render(
         request,
         "servicios/ver_servicios_tecnico.html",
+        {"servicios_asignados": servicios_asignados},
+    )
+    
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
+def ver_servicios_all(request):
+    # Subconsulta para obtener las asignaciones de servicios más recientes para cada servicio_id
+    subquery = AsignacionServicio.objects.filter(
+        servicio_id=OuterRef('servicio_id'),
+        tecnico=OuterRef('tecnico'),
+        servicio__estado_servicio__nombre__in=["Asignado", "Iniciado"]
+    ).order_by('-fecha_asignacion').values('id')[:1]
+
+    # Obtener las asignaciones de servicios más recientes para cada servicio_id
+    servicios_asignados = AsignacionServicio.objects.filter(
+        id__in=Subquery(subquery)
+    )
+    if request.method == "POST":
+        # Procesar el formulario de marcado como completado
+        servicio_id = request.POST.get("servicio_id")
+        if servicio_id:
+            servicio = Servicio.objects.get(pk=servicio_id)
+            servicio.estado_servicio = EstadoServicio.objects.get(nombre="Completado")
+            servicio.save()
+            return redirect("ver_servicios_tecnico")
+
+    return render(
+        request,
+        "servicios/servicios_iniciados.html",
         {"servicios_asignados": servicios_asignados},
     )
 
@@ -495,7 +530,7 @@ class LavadoDetail(DetailView):
         servicio_id = self.kwargs.get('servicio_id')
         ctx['servicio'] = Servicio.objects.get(id=servicio_id) if servicio_id else None
         ctx['servicio_lavado_list'] = ServicioLavadoTanque.objects.filter(servicio=servicio_id) if servicio_id else None
-        asignacion = AsignacionServicio.objects.get(servicio_id=servicio_id)
+        asignacion = AsignacionServicio.objects.filter(servicio_id=servicio_id).latest('fecha_asignacion') if servicio_id else None
         servicio_lavado = ServicioLavadoTanque.objects.get(servicio=servicio_id)
         ctx['anexos'] = AnexoImagen.objects.filter(servicio_lavado=servicio_lavado) if servicio_id else None
         ctx['tanques'] = Tanque.objects.filter(servicio_lavado=servicio_lavado) if servicio_id else None
@@ -645,5 +680,7 @@ def iniciar_servicio(request, servicio_id):
     # Verifica que el servicio aún no haya sido iniciado
     if not servicio.fecha_inicio:
         servicio.fecha_inicio = timezone.now()
+        new_estado = EstadoServicio.objects.get(pk=5)
+        servicio.estado_servicio = new_estado #asignamos el estado_servicio_id correspondiente a Iniciado
         servicio.save()
     return redirect('ver_servicios_tecnico')
