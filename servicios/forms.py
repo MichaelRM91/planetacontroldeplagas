@@ -22,7 +22,7 @@ class ServicioForm(forms.ModelForm):
         ]
 
     cliente = forms.ModelChoiceField(
-        label="Cliente", queryset=Cliente.objects.all(), empty_label=None
+        label="Cliente", queryset=Cliente.objects.all().order_by('razon_social'), empty_label=None
     )
     tipo_servicio = forms.ModelChoiceField(
         label="Tipo de Servicio", queryset=TipoServicio.objects.all(), empty_label=None

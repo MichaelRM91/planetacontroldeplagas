@@ -18,19 +18,24 @@
               {% if asignacion.servicio.servicio_fumigacion %}
                 <a href="{% url 'update_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
               {% else %}
-                <a href="{% url 'create_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+                {% if asignacion.servicio.fecha_inicio %}
+                  <a href="{% url 'create_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+                {% endif %}
               {% endif %}
             {% endif %}
 
             {% if asignacion.servicio.tipo_servicio.nombre == "Lavado de Tanques" %}
+            {% if asignacion.servicio.fecha_inicio %}
               <a href="{% url 'create_lavado' asignacion.servicio.id %}" class="btn btn-success btn-sm">Generar</a>
             {% endif %}
+            {% endif %}
+            {% if asignacion.servicio.servicio_lavado_tanque %}
             <form method="post" style="display: inline;">
               {% csrf_token %}
               <input type="hidden" name="servicio_id" value="{{ asignacion.servicio.id }}">
               <input type="submit" class="btn btn-success btn-sm" value="Completado">
             </form>
-
+            {% endif %}
             {% if not asignacion.servicio.fecha_inicio %}
               <a href="{% url 'iniciar_servicio' asignacion.servicio.id %}" class="btn btn-info btn-sm">Iniciar Servicio</a>
             {% else %}
@@ -76,7 +81,9 @@
               {% if asignacion.servicio.servicio_fumigacion %}
                 <a href="{% url 'update_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
               {% else %}
-                <a href="{% url 'create_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+                {% if asignacion.servicio.fecha_inicio %}
+                  <a href="{% url 'create_product' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+                {% endif %}
               {% endif %}
             {% endif %}
 
@@ -84,17 +91,21 @@
               {% if asignacion.servicio.servicio_lavado_tanque %}
                 <a href="{% url 'update_lavado' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Actualizar</a>
               {% else %}
-                <a href="{% url 'create_lavado' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+                {% if asignacion.servicio.fecha_inicio %}
+                  <a href="{% url 'create_lavado' asignacion.servicio.id %}" class="btn btn-primary btn-sm">Generar</a>
+                {% endif %}
               {% endif %}
             {% endif %}
           </td>
 
           <td>
+            {% if asignacion.servicio.servicio_lavado_tanque %}
             <form method="post" style="display: inline;">
               {% csrf_token %}
               <input type="hidden" name="servicio_id" value="{{ asignacion.servicio.id }}">
               <input type="submit" class="btn btn-success btn-sm" value="Completado">
             </form>
+            {% endif %}
           </td>
         </tr>
       {% empty %}

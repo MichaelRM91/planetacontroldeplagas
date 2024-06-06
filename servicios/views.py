@@ -153,16 +153,18 @@ def reasignar_servicio(request, servicio_id):
 
 @login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
 def ver_servicios_tecnico(request):
+    tecnico = request.user.tecnico
+
     # Subconsulta para obtener las asignaciones de servicios más recientes para cada servicio_id
     subquery = AsignacionServicio.objects.filter(
         servicio_id=OuterRef('servicio_id'),
-        tecnico=OuterRef('tecnico'),
         servicio__estado_servicio__nombre__in=["Asignado", "Iniciado"]
     ).order_by('-fecha_asignacion').values('id')[:1]
 
     # Obtener las asignaciones de servicios más recientes para cada servicio_id
     servicios_asignados = AsignacionServicio.objects.filter(
-        id__in=Subquery(subquery)
+        id__in=Subquery(subquery),
+        tecnico=tecnico
     )
 
     if request.method == "POST":
@@ -184,8 +186,7 @@ def ver_servicios_tecnico(request):
 def ver_servicios_all(request):
     # Subconsulta para obtener las asignaciones de servicios más recientes para cada servicio_id
     subquery = AsignacionServicio.objects.filter(
-        servicio_id=OuterRef('servicio_id'),
-        tecnico=OuterRef('tecnico'),
+        servicio_id=OuterRef('servicio_id'),   
         servicio__estado_servicio__nombre__in=["Asignado", "Iniciado"]
     ).order_by('-fecha_asignacion').values('id')[:1]
 
@@ -215,6 +216,15 @@ def ver_servicios_completados(request):
     return render(
         request,
         "servicios/ver_servicios_tecnico_completados.html",
+        {"servicios_asignados": servicios_asignados},
+    )
+    
+@login_required  # Agrega el decorador para asegurarte de que el usuario esté autenticado
+def servicios_completed(request):
+    servicios_asignados = AsignacionServicio.objects.filter(Q(servicio__estado_servicio__nombre = "Completado"))
+    return render(
+        request,
+        "servicios/servicios_completed.html",
         {"servicios_asignados": servicios_asignados},
     )
 
