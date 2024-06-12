@@ -16,6 +16,11 @@
 
           <div class="form-buttons">
             <a href="{% url 'details_product' servicio.id %}" class="btn btn-sm btn-success me-2">Certificado</a>
+            {% if servicio.tipo_servicio.nombre == 'Fumigacion' %}
+              <a href="{% url 'generate_pdf_fumigacion' servicio.id %}" class="btn btn-sm btn-primary">PDF Fumigación</a>
+            {% elif servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
+              <a href="{% url 'generate_pdf_lavado' servicio.id %}" class="btn btn-sm btn-primary">PDF Lavado</a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -36,6 +41,7 @@
           <th>Estado Servicio</th>
           <th>Asignado a</th>
           <th>Asignacion</th>
+          <th>Descargar Certificado</th>
         </tr>
       </thead>
       <tbody>
@@ -57,6 +63,13 @@
               <a href="{% url 'details_product' servicio.id %}" class="btn btn-sm btn-success me-2">Certificado</a>
             {% endif %}
           </td>
+          <td>
+            {% if servicio.tipo_servicio.nombre == 'Fumigacion' %}
+            <a href="{% url 'generate_pdf_fumigacion' servicio.id %}" class="btn btn-sm btn-primary">PDF Fumigación</a>
+            {% elif servicio.tipo_servicio.nombre == 'Lavado de Tanques' %}
+            <a href="{% url 'generate_pdf_lavado' servicio.id %}" class="btn btn-sm btn-primary">PDF Lavado</a>
+            {% endif %}          
+        </td>
         </tr>
         {% empty %}
         <tr>

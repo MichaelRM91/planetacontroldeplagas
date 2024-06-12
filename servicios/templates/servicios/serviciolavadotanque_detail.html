@@ -4,6 +4,55 @@
 {% load static %}
 {% block content %}
 <div class="container p-4" method="post" id="product_form">
+  <style>
+    .table {
+        width: 200%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: collapse;
+    }
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+    }
+    .table tbody + tbody {
+        border-top: 2px solid #dee2e6;
+    }
+    .table .table {
+        background-color: #fff;
+    }
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #dee2e6;
+    }
+    .table-bordered thead th,
+    .table-bordered thead td {
+        border-bottom-width: 2px;
+    }
+    .text-center {
+        text-align: center !important;
+    }
+    .p-4 {
+        padding: 1.5rem !important;
+    }
+    .gridlines {
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+    .gridlines td, .gridlines th {
+        border: 1px solid black;
+        padding: 8px;
+    }
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="{% static 'scripts/generate_pdf.js' %}"></script>
   <button class="btn btn-primary" id="generatePdfBtn" onclick="generatePdfBtn('{{ servicio.cliente.razon_social}}' , '{{ servicio.id}}' )">Generar PDF</button>
@@ -13,6 +62,9 @@
         <tr>
           <td colspan="2" style="text-align:center;">
             <img src="{% static 'images/logo.png' %}" alt="Logo" width="50%">
+            {% if exclude %}
+            <img src="{{ logo_url }}" alt="Logo" width="50%">
+            {% endif %}
           </td>
           <td colspan="2" style="text-align:center;">
             {{ infoEmpresas.nit }}<br>
@@ -132,7 +184,11 @@
           <td colspan="2"><strong>FIRMA</strong>
             {% if firma %}
               <img src="{{ firma.0.imagen.url }}" alt="Imagen de firma" style="max-width: 250px; max-height: 100%;">
-            {% else %}
+            {% endif %}
+            {% if exclude and firma_url %}
+              <img src="{{ firma_url }}" alt="Firma" class="firma">
+            {% endif %}
+            {% if not firma and not firma_url%}
               <form action=" {% url "guardar_firma_lavado" servicio.id %}" method="POST" id="firmaForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input class="form-control" type="file" id="formFile" name='imagen' accept="image/*" onchange="previewFirma()" style="width: 221px;">
@@ -144,7 +200,7 @@
           </td>
         </tr>
         <tr style="text-align:center;">
-          <td colspan="6">
+          <td colspan="4">
             <b>
               {{ infoEmpresas.agradecimiento }}<br>
               {{ infoEmpresas.compromiso }}<br>

@@ -17,7 +17,8 @@ from .forms import EvidenciaMedidaForm, ProductoUtilizadoForm
 from datetime import date, timedelta
 from django.db.models import OuterRef, Subquery
 from .models import *
-
+from xhtml2pdf import pisa
+from django.conf.urls.static import static
 from .forms import (
     AsignacionServicioForm,
     ServicioForm,
@@ -694,3 +695,74 @@ def iniciar_servicio(request, servicio_id):
         servicio.estado_servicio = new_estado #asignamos el estado_servicio_id correspondiente a Iniciado
         servicio.save()
     return redirect('ver_servicios_tecnico')
+
+def generate_pdf_fumigacion(request, servicio_id):
+    servicio = get_object_or_404(Servicio, id=servicio_id)
+    servicio_fumigacion = ServicioFumigacion.objects.filter(servicio=servicio).first()
+    precauciones = ServicioPrecaucion.objects.filter(servicio_fumigacion=servicio_fumigacion).select_related('precaucion')
+    recomendaciones = ServicioRecomendacion.objects.filter(servicio_fumigacion=servicio_fumigacion).select_related('recomendacion')
+    evidencias = EvidenciaMedida.objects.filter(servicio_fumigacion=servicio_fumigacion).select_related('evidencia', 'medida', 'ubicacion')
+    productos = ProductoUtilizado.objects.filter(servicio_fumigacion=servicio_fumigacion).select_related('producto', 'unidad_medida', 'categoria_toxixologica')
+    firma = firmas_servicio_fumigacion.objects.filter(servicio_fumigacion=servicio_fumigacion).first()
+    tecnico = Tecnico.objects.filter(asignacionservicio__servicio=servicio).first()
+    info_empresa = infoEmpresa.objects.first()
+    logo_url = 'public/static/images/logo.png'
+    firma_url = firma.imagen
+
+    context = {
+        'servicio': servicio,
+        'precauciones': precauciones,
+        'recomendaciones': recomendaciones,
+        'evidencia_medida': evidencias,
+        'productos_utilizados': productos,
+        'infoEmpresas': info_empresa,
+        'firma_url': firma_url,
+        'tecnico': tecnico,
+        'servicio_fumigacion_list': [servicio_fumigacion],
+        'logo_url': logo_url,
+        'exclude': True,
+    }
+    template_path = 'servicios/serviciofumigacion_detail.html'
+    template = get_template(template_path)
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=servicio_{servicio_id}.pdf'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=400)
+    return response
+
+def generate_pdf_lavado(request, servicio_id):
+    servicio = get_object_or_404(Servicio, id=servicio_id)
+    servicio_lavado = ServicioLavadoTanque.objects.filter(servicio=servicio).first()
+    tanques = Tanque.objects.filter(servicio_lavado=servicio_lavado)
+    anexos = AnexoImagen.objects.filter(servicio_lavado=servicio_lavado)
+    firma = firmas_servicio_Lavado.objects.filter(servicio_Lavado=servicio_lavado).first()
+    tecnico = Tecnico.objects.filter(asignacionservicio__servicio=servicio).first()
+    info_empresa = infoEmpresa.objects.first()
+    logo_url = 'public/static/images/logo.png'
+    firma_url = firma.imagen
+    context = {
+        'servicio': servicio,
+        'tanques': tanques,
+        'anexos': anexos,
+        'infoEmpresas': info_empresa,
+        'firma_url': firma_url,
+        'tecnico': tecnico,
+        'servicio_lavado': servicio_lavado,
+        'logo_url': logo_url,
+        'exclude': True,
+    }
+    template_path = 'servicios/serviciolavado_detail.html'
+    template = get_template(template_path)
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=servicio_lavado_{servicio_id}.pdf'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=400)
+    return response

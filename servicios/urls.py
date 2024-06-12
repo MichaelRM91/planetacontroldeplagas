@@ -42,4 +42,7 @@ urlpatterns = [
     path('iniciar_servicio/<int:servicio_id>/', views.iniciar_servicio, name='iniciar_servicio'),
     path('servicios/servicios_all/', views.ver_servicios_all, name='ver_servicios_all'),
     path('servicios/servicios_completed/', views.servicios_completed, name='ver_servicios_completed'),
+    path('generate_pdf_fumigacion/<int:servicio_id>/', generate_pdf_fumigacion, name='generate_pdf_fumigacion'),
+    path('generate_pdf_lavado/<int:servicio_id>/', generate_pdf_lavado, name='generate_pdf_lavado'),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
