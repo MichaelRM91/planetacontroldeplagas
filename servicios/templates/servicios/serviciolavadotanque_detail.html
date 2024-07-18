@@ -15,24 +15,24 @@
     .table td {
         padding: 0.75rem;
         vertical-align: top;
-        border-top: 1px solid #dee2e6;
+        border-top: 1px solid #333;
     }
     .table thead th {
         vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6;
+        border-bottom: 2px solid #333;
     }
     .table tbody + tbody {
-        border-top: 2px solid #dee2e6;
+        border-top: 2px solid #333;
     }
     .table .table {
         background-color: #fff;
     }
     .table-bordered {
-        border: 1px solid #dee2e6;
+        border: 1px solid #333;
     }
     .table-bordered th,
     .table-bordered td {
-        border: 1px solid #dee2e6;
+        border: 1px solid #333;
     }
     .table-bordered thead th,
     .table-bordered thead td {
@@ -52,6 +52,15 @@
         border: 1px solid black;
         padding: 8px;
     }
+    .title-cell {
+      background-color: #DBE0F4 !important;
+    }
+    .title-blue {
+      background-color: #8EA9DE !important;
+    }
+    .table {
+      font-size: 16px;
+  }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="{% static 'scripts/generate_pdf.js' %}"></script>
@@ -91,8 +100,8 @@
         </tr>
         {% comment %} INFORMACION DEL CLIENTE {% endcomment %}
         <tr>
-          <td colspan="3"><strong>RAZON SOCIAL:</strong> {{ servicio.cliente.razon_social}}</td>
-          <td colspan="1"><strong>CONTACTO:</strong> {{ servicio.cliente.contacto}}</td>
+          <td colspan="2"><strong>RAZON SOCIAL:</strong> {{ servicio.cliente.razon_social}}</td>
+          <td colspan="2"><strong>CONTACTO:</strong> {{ servicio.cliente.contacto}}</td>
         </tr>
         <tr>
           <td colspan="1"><strong>NIT</strong></td>
@@ -102,26 +111,26 @@
         </tr>
         {% comment %} FECHA DE EJECUCION {% endcomment %}
         <tr>
-          <td  colspan="1"><br><strong>FECHA EJECUCION</strong> </td>
-          <td  colspan="1"><br>{{ servicio.fecha_ejecucion }}</td>
-          <td  colspan="1"><br><strong>FECHA VENCIMIENTO</strong> </td>
-          <td  colspan="1"><br>{{ servicio.fecha_vencimiento }}</td>
+          <td  colspan="1"><strong>FECHA EJECUCION</strong> </td>
+          <td  colspan="1">{{ servicio.fecha_ejecucion }}</td>
+          <td  colspan="1"><strong>FECHA VENCIMIENTO</strong> </td>
+          <td  colspan="1">{{ servicio.fecha_vencimiento }}</td>
         </tr>
         <tr> 
-          <td  colspan="6" style="text-align:center;"><strong>PROCEDIMIENTO BASICO</strong>
+          <td  class="title-cell" colspan="6" style="text-align:center;"><strong>PROCEDIMIENTO BASICO</strong>
         </tr>
         <tr> 
-          <td colspan="6" style="text-align:center;">{{ infoEmpresas.procedimiento_basico }}</td>
+          <td class="title-cell" colspan="6" style="text-align:center;">{{ infoEmpresas.procedimiento_basico }}</td>
         </tr>
         {% for tanque in tanques %}
         <tr>
-          <td  colspan="6" style="text-align:center;"><br><strong>TANQUE NUMERO {{tanque.id}}</strong> </td>
+          <td  class="title-blue" colspan="6" style="text-align:center;"><strong>TANQUE NUMERO {{tanque.id}}</strong> </td>
 
         </tr>
         <tr>
-          <td  colspan="2" style="text-align:center;"><strong>IDENTIFICACION DEL TANQUE</strong> </td>
+          <td  class="title-blue" colspan="2" style="text-align:center;"><strong>IDENTIFICACION DEL TANQUE</strong> </td>
 
-          <td  colspan="2" style="text-align:center;"><strong>FACTORES DE RIESGO</strong></td>
+          <td  class="title-blue" colspan="2" style="text-align:center;"><strong>FACTORES DE RIESGO</strong></td>
         </tr>
         <tr>
           <td  colspan="1" style="text-align:center;"><strong>UBICACION DEL TANQUE</strong></td>
@@ -164,7 +173,7 @@
         </tr>
         {% endfor %}
         <tr> 
-          <td  colspan="6" style="text-align:center;"><br><strong>ANEXOS GENERALES</strong>
+          <td  class="title-cell" colspan="6" style="text-align:center;"><strong>ANEXOS GENERALES</strong>
         </tr>
         <tr>
             {% for anexo in anexos %}
@@ -181,7 +190,7 @@
 
         <tr>
           <td colspan="2"><strong>TECNICO APLICADOR: </strong> <br> {{tecnico}}</td>
-          <td colspan="2"><strong>FIRMA</strong>
+          <td  class="title-cell" colspan="2"><strong>FIRMA DE RECIBIDO</strong>
             {% if firma %}
               <img src="{{ firma.0.imagen.url }}" alt="Imagen de firma" style="max-width: 250px; max-height: 100%;">
             {% endif %}

@@ -730,6 +730,10 @@ def generate_pdf_fumigacion(request, servicio_id):
     response['Content-Disposition'] = f'attachment; filename=servicio_{servicio_id}.pdf'
     pisa_status = pisa.CreatePDF(html, dest=response)
 
+    pisa_status = pisa.CreatePDF(
+        html, dest=response    
+    )
+
     if pisa_status.err:
         return HttpResponse('Error al generar el PDF', status=400)
     return response
@@ -763,6 +767,10 @@ def generate_pdf_lavado(request, servicio_id):
     response['Content-Disposition'] = f'attachment; filename=servicio_lavado_{servicio_id}.pdf'
     pisa_status = pisa.CreatePDF(html, dest=response)
 
+    pisa_status = pisa.CreatePDF(
+        html, dest=response
+    )
+    
     if pisa_status.err:
         return HttpResponse('Error al generar el PDF', status=400)
     return response

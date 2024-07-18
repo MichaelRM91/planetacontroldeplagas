@@ -15,24 +15,24 @@
     .table td {
         padding: 0.75rem;
         vertical-align: top;
-        border-top: 1px solid #dee2e6;
+        border-top: 1px solid #333;
     }
     .table thead th {
         vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6;
+        border-bottom: 2px solid #333;
     }
     .table tbody + tbody {
-        border-top: 2px solid #dee2e6;
+        border-top: 2px solid #333;
     }
     .table .table {
         background-color: #fff;
     }
     .table-bordered {
-        border: 1px solid #dee2e6;
+        border: 1px solid #333;
     }
     .table-bordered th,
     .table-bordered td {
-        border: 1px solid #dee2e6;
+        border: 1px solid #333;
     }
     .table-bordered thead th,
     .table-bordered thead td {
@@ -52,6 +52,12 @@
         border: 1px solid black;
         padding: 8px;
     }
+    .title-cell {
+      background-color: #E2EFDB !important;
+    }
+    .table {
+      font-size: 16px;
+  }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="{% static 'scripts/generate_pdf.js' %}"></script>
@@ -93,8 +99,8 @@
         </tr>
         {% comment %} INFORMACION DEL CLIENTE {% endcomment %}
         <tr>
-          <td colspan="3"><strong>RAZON SOCIAL:</strong> {{ servicio.cliente.razon_social}}</td>
-          <td colspan="1"><strong>CONTACTO:</strong> {{ servicio.cliente.contacto}}</td>
+          <td colspan="2"><strong>RAZON SOCIAL:</strong> {{ servicio.cliente.razon_social}}</td>
+          <td colspan="2"><strong>CONTACTO:</strong> {{ servicio.cliente.contacto}}</td>
         </tr>
         <tr>
           <td colspan="1"><strong>NIT</strong></td>
@@ -104,14 +110,14 @@
         </tr>
         {% comment %} FECHA DE EJECUCION {% endcomment %}
         <tr>
-          <td  colspan="1"><br><strong>FECHA EJECUCION</strong> </td>
-          <td  colspan="1"><br>{{ servicio.fecha_ejecucion }}</td>
-          <td  colspan="1"><br><strong>FECHA VENCIMIENTO</strong> </td>
-          <td  colspan="1"><br>{{ servicio.fecha_vencimiento }}</td>
+          <td  colspan="1"><strong>FECHA EJECUCION</strong> </td>
+          <td  colspan="1">{{ servicio.fecha_ejecucion }}</td>
+          <td  colspan="1"><strong>FECHA VENCIMIENTO</strong> </td>
+          <td  colspan="1">{{ servicio.fecha_vencimiento }}</td>
         </tr>
         <tr >
-          <td  colspan="2" style="text-align:center;"><br><strong>PRECAUCIONES</strong></td>
-          <td  colspan="2" style="text-align:center;"><br><strong>RECOMENDACIONES</strong></td>
+          <td  colspan="2" class="title-cell" style="text-align:center;"><strong>PRECAUCIONES</strong></td>
+          <td  class="title-cell" colspan="2" style="text-align:center;"><strong>RECOMENDACIONES</strong></td>
         </tr>
         <tr>
           
@@ -130,9 +136,9 @@
         <tr/>
         
         <tr>
-          <td  colspan="2" style="text-align:center;"><br><strong>EVIDENCIAS</strong> </td>
+          <td  class="title-cell" colspan="2" style="text-align:center;"><strong>EVIDENCIAS</strong> </td>
 
-          <td  colspan="2" style="text-align:center;"><br><strong>PRODUCTOS UTILIZADOS</strong></td>
+          <td  class="title-cell" colspan="2" style="text-align:center;"><strong>PRODUCTOS UTILIZADOS</strong></td>
         </tr>
         <tr>
           {% comment %} LISTA DE EVIDENCIAS {% endcomment %}
@@ -151,7 +157,7 @@
           </td>
         </tr>
         <tr>
-          <td  colspan="1"><strong>LUGARES TRATADOS</strong></td>
+          <td  class="title-cell" colspan="1"><strong>LUGARES TRATADOS</strong></td>
           
             {% for servicio_fumigacion in servicio_fumigacion_list %}
               {% for lugar in servicio_fumigacion.lugares_tratados.all %}
@@ -162,7 +168,7 @@
           
         </tr>
         <tr >
-          <td colspan="1"><strong>TIPO DE APLICACION:</strong></td>
+          <td class="title-cell" colspan="1"><strong>TIPO DE APLICACION:</strong></td>
           
             {% for servicio_fumigacion in servicio_fumigacion_list %}
               {% for control in servicio_fumigacion.tipo_control_implementado.all %}
@@ -172,19 +178,19 @@
             {% endfor %}
         </tr>
         <tr>
-          <td colspan="1"><br><strong>INGENIERO AGRONOMO </strong></td>
-          <td colspan="1"><br>Miguel Meneses Alvarez</td>
-          <td colspan="1"><br><strong>TECNICO APLICADOR </strong></td>
-          <td colspan="1"><br><strong>{{tecnico}} </strong></td>
+          <td colspan="1"><strong>INGENIERO AGRONOMO </strong></td>
+          <td colspan="1">Miguel Meneses Alvarez</td>
+          <td colspan="1"><strong>TECNICO APLICADOR </strong></td>
+          <td colspan="1"><strong>{{tecnico}} </strong></td>
         </tr>
         <tr>
-          <td colspan="1"><br><strong>OBSERVACIONES</strong></td>
+          <td colspan="1"><strong>OBSERVACIONES</strong></td>
           <td colspan="2"><br>
             {% for servicio in servicio_fumigacion_list %}
               {{servicio.observaciones}}
             {% endfor %}
           </td>
-          <td colspan="1"><strong>FIRMA</strong>
+          <td class="title-cell" colspan="1"><strong>FIRMA DE RECIBIDO</strong>
             {% if exclude and firma_url %}
               <img src="{{ firma_url }}" alt="Firma" class="firma">
             {% endif %}

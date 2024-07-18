@@ -49,10 +49,8 @@
         <tr>
           <th>NIT</th>
           <th>Razon social</th>
-          <th>Telefono</th>
-          <th>Contacto</th>
-          <th>Email</th>
           <th>Direccion</th>
+          <th>Info de Contacto</th>
           <th>Creado Por</th>
           <th>Acciones</th>
         </tr>
@@ -62,13 +60,15 @@
         <tr>
           <td>{{ cliente.nit }}</td>
           <td>{{ cliente.razon_social }}</td>
-          <td> <i class="fa-brands fa-whatsapp"></i>
-            <a href="https://wa.me/{{ cliente.telefono }}" target="_blank">{{ cliente.telefono }}
+          <td> 
+            <a> {{ cliente.direccion}}</a>
           </td>
-          <td>{{ cliente.contacto }}</td>
-          <td>{{ cliente.email }}</td>
-          <td>{{ cliente.direccion}}</td>
-          <td>{{ cliente.created_by}}</td>
+          <td>
+            <a> {{ cliente.contacto }} </a> <br>
+            <i class="fa-brands fa-whatsapp"></i> <a href="https://wa.me/{{ cliente.telefono }}" target="_blank">{{ cliente.telefono }} </a> <br>
+            <a> {{ cliente.email }} </a>
+          </td>
+          <td>{{ cliente.created_by}}</td> 
           <td>
             {% if request.user.is_staff %}
               <a href="{% url 'cliente_edit' cliente.id %}" class="btn btn-sm btn-warning me-2">Editar</a>
