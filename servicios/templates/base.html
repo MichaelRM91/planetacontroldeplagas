@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
@@ -11,64 +11,87 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-czvf61mAtGuhqZgF8tAPDlMj02F4LyQeP3eZiYrA7Uyo4olKOovlqUmffl7OJJ1u" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/d4defd7249.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'style/table_card.css' %}">
-  </head>
-  <body>
+    <style>
+        .navbar-nav .nav-item {
+            position: relative;
+        }
+        .navbar-nav .nav-item + .nav-item {
+            margin-left: 15px; /* Espacio entre elementos */
+        }
+        .navbar-nav .nav-item::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 1px;
+            height: 30%;
+            background: #ccc; /* Color de la línea */
+            transform: translateY(-50%);
+        }
+        .navbar-nav .nav-item:last-child::after {
+            display: none; /* Ocultar línea después del último elemento */
+        }
+    </style>
+</head>
+<body>
     {% if not exclude %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-          <a class="navbar-brand" href="{% url "welcome" %}">
-              <img src="{% static 'images/logo.png' %}" alt="Logo" width="100%">
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav ms-auto">
-                  <li class="nav-item ml-auto" style="display: flex; justify-content: flex-end;">
-                      {% if user.is_authenticated and user.is_superuser %}
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'welcome' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" width="100%">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated and user.is_superuser %}
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'servicios_list' %}">Servicios</a>
-                      {% endif %}
-                      {% if user.is_authenticated and user.is_superuser %}
-                      <a class="nav-link" href="{% url 'ver_servicios_all' %}">Gestion Servicios</a>
-                      {% endif %}
-                      {% if user.is_authenticated and user.is_superuser %}
-                      <a class="nav-link" href="{% url 'ver_servicios_completed' %}">Servicios Completados</a>
-                      {% endif %}
-                      {% if user.is_authenticated and user.tecnico or user.is_staff  %}
-                          <a class="nav-link" href="{% url 'cliente_list' %}">Clientes</a>
-                        {% endif %}
-            
-                      {% if user.is_authenticated %}
-                          {% if not user.is_superuser %}
-                            {% if not user.tecnico %}
-                              <a class="nav-link" href="{% url 'cliente_servicios'%}">Mis Servicios</a>
-                            {% endif %}
-                          {% endif %}
-                      {% endif %}
-
-                      {% if user.is_authenticated and user.tecnico %}
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ver_servicios_all' %}">Gestion Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'ver_servicios_completed' %}">Servicios Completados</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated and user.tecnico or user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cliente_list' %}">Clientes</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated and not user.is_superuser and not user.tecnico %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cliente_servicios' %}">Mis Servicios</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated and user.tecnico %}
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'ver_servicios_tecnico' %}">Asignados</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'ver_servicios_completados' %}">Completados</a>
-                      {% endif %}
-                      <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <strong>Hola {{user}}</strong>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <strong>Hola {{user}}</strong>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                          <li><a class="dropdown-item" href="/logout/">Cerrar Sesión</a></li>
+                            <li><a class="dropdown-item" href="/logout/">Cerrar Sesión</a></li>
                         </ul>
-                      </li>
-                  </li>
-              </ul>
-          </div>
-      </div>
-  </nav>
-  {% endif %}
-  
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
 
     {% block content %}{% endblock %}
     <script src="{% static 'scripts/table_card.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-  </body>
+</body>
 </html>
