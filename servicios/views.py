@@ -29,6 +29,7 @@ from .forms import (
     ServicioFumigacionRecomendacionesFormSet,
     ServicioFumigacionPrecaucionesFormSet,
     ServicioLavadoTanqueAnexosFormset,
+    ServicioLavadoTanqueFirmaFormset, ServicioFumigacionFirmaFormset,
     FirmaLavadoForm, FirmaFumigacionForm, ServicioLavadoTanqueFormset,
     ClienteForm
 
@@ -360,6 +361,7 @@ class ProductCreate(FumigacionInline, CreateView):
                 'productos': ServicioFumigacionProductoUtilizadoFormSet(prefix='productos'),
                 'precauciones': ServicioFumigacionPrecaucionesFormSet(prefix='precauciones'),
                 'recomendaciones': ServicioFumigacionRecomendacionesFormSet(prefix='recomendaciones'),
+                'firma_fumigacion': ServicioFumigacionFirmaFormset(prefix='firma_fumigacion'),
                 
             }
         else:
@@ -368,6 +370,7 @@ class ProductCreate(FumigacionInline, CreateView):
                 'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, prefix='productos'),
                 'precauciones': ServicioFumigacionPrecaucionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='precauciones'),
                 'recomendaciones': ServicioFumigacionRecomendacionesFormSet(self.request.POST or None, self.request.FILES or None, prefix='recomendaciones'),
+                'firma_fumigacion': ServicioFumigacionFirmaFormset(self.request.POST or None, self.request.FILES or None, prefix='firma_fumigacion'),
             }      
 
 
@@ -392,6 +395,7 @@ class ProductUpdate(FumigacionInline, UpdateView):
             'productos': ServicioFumigacionProductoUtilizadoFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='productos'),
             'precauciones': ServicioFumigacionPrecaucionesFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='precauciones'),
             'recomendaciones': ServicioFumigacionRecomendacionesFormSet(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='recomendaciones'),
+            'firma_fumigacion': ServicioFumigacionFirmaFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='firma_fumigacion'),
         }
 
 class ProductDetail(DetailView):
@@ -482,6 +486,14 @@ class LavadoInline():
         for tanque in tanques:
             tanque.servicio_lavado= self.object
             tanque.save()
+    def formset_firma_valid(self, formset):
+        firmas = formset.save(commit=False)  
+        
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for firma in firmas:
+            firma.servicio_lavado= self.object
+            firma.save()
             
 class LavadoCreate(LavadoInline, CreateView):
 
@@ -497,12 +509,14 @@ class LavadoCreate(LavadoInline, CreateView):
         if self.request.method == "GET":
             return {
                 'anexos': ServicioLavadoTanqueAnexosFormset(prefix='anexos'), 
-                'tanques': ServicioLavadoTanqueFormset(prefix='tanques') 
+                'tanques': ServicioLavadoTanqueFormset(prefix='tanques'), 
+                'firma_lavado': ServicioLavadoTanqueFirmaFormset(prefix='fima_lavado'), 
             }
         else:
             return {
                 'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, prefix='anexos'),
-                'tanques': ServicioLavadoTanqueFormset(self.request.POST or None, self.request.FILES or None, prefix='tanques')
+                'tanques': ServicioLavadoTanqueFormset(self.request.POST or None, self.request.FILES or None, prefix='tanques'),
+                'firma_lavado': ServicioLavadoTanqueFirmaFormset(self.request.POST or None, self.request.FILES or None, prefix='firma_lavado')
             }  
             
 class LavadoUpdate(LavadoInline, UpdateView):
@@ -523,7 +537,8 @@ class LavadoUpdate(LavadoInline, UpdateView):
     def get_named_formsets(self):
         return {
             'anexos': ServicioLavadoTanqueAnexosFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='anexos'),
-            'tanques': ServicioLavadoTanqueFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='tanques')
+            'tanques': ServicioLavadoTanqueFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='tanques'),
+            'firma_lavado': ServicioLavadoTanqueFirmaFormset(self.request.POST or None, self.request.FILES or None, instance=self.object, prefix='firma_lavado')
         }    
         
 class LavadoDetail(DetailView):
@@ -657,32 +672,37 @@ def eliminar_servicio(request, servicio_id):
     return redirect('servicios_list')
 
 def guardar_firma_lavado(request, servicio_id):
+    print("hola")
     if request.method == 'POST':
         form = FirmaLavadoForm(request.POST, request.FILES)
         if form.is_valid():
             firma = form.save(commit=False)
             firma.servicio_Lavado = ServicioLavadoTanque.objects.get(servicio=servicio_id)
             firma.save()
-            return redirect('details_lavado', servicio_id=servicio_id)
+            print(servicio_id)
+            # return redirect('details_lavado', servicio_id=servicio_id)
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
     else:
         form = FirmaLavadoForm()
-    return redirect('details_lavado', servicio_id=servicio_id)
+    # return redirect('details_lavado', servicio_id=servicio_id)
 
 def guardar_firma_fumigacion(request, servicio_id):
+    print("hola")
     if request.method == 'POST':
         form = FirmaFumigacionForm(request.POST, request.FILES)
         if form.is_valid():
             firma = form.save(commit=False)
             firma.servicio_fumigacion = ServicioFumigacion.objects.get(servicio=servicio_id)
             firma.save()
-            return redirect('details_product', servicio_id=servicio_id)
+            print(servicio_id)
+
+            # return redirect('details_product', servicio_id=servicio_id)
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
     else:
         form = FirmaFumigacionForm()
-    return redirect('details_product', servicio_id=servicio_id)
+    # return redirect('details_product', servicio_id=servicio_id)
 
 
 def iniciar_servicio(request, servicio_id):

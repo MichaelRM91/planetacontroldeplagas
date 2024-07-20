@@ -348,7 +348,81 @@
     </div>
 {% endwith %}
 
- 
+{% with named_formsets.firma_fumigacion as formset %}
+{{ formset.management_form }}
+<script type="text/html" id="firma-template">
+    <tr id="firma-__prefix__" class="hide_all">
+        {% for fields in formset.empty_form.hidden_fields %}
+            {{ fields }}
+        {% endfor %}
+        {% for fields in formset.empty_form.visible_fields %}
+            <td>{{ fields }}</td>
+        {% endfor %}
+    </tr>
+</script>
+
+<div class="table-responsive card mt-4">
+    <div class="card-header card-header-secondary">
+        <h4 class="card-title">Firma</h4>
+    </div>
+    <table class="table card-body">
+        <tbody id="item-firma">
+            {% for error in formset.non_form_errors %}
+                <span style="color: red">{{ error }}</span>
+            {% endfor %}
+            {% for formss in formset %}
+                {{ formss.management_form }}
+                <tr id="firma-{{ forloop.counter0 }}" class="hide_all">
+                    {{ formss.id }}
+                    {% for field in formss.visible_fields %}
+            <td>
+                {% if field.name == 'imagen' %}
+                    {% if field.value %}
+                        <img src="{{ field.value.url }}" width="80%">
+                    {% else %}
+                        {{ field }}
+                        <img id="firma-preview-{{ forloop.counter0 }}" width="50%" class="img-preview d-none">
+                    {% endif %}
+                {% else %}
+                    {{ field }}
+                {% endif %}
+                {% for error in field.errors %}
+                    <span style="color: red">{{ error }}</span>
+                {% endfor %}
+            </td>
+        {% endfor %}
+                    <!-- Código para eliminar -->
+                    {% if formss.instance.pk %}
+                        <td>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{ formss.instance.pk }}">
+                                Eliminar
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal{{ formss.instance.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{ formss.instance.pk }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel{{ formss.instance.pk }}">¿Seguro que deseas eliminar esto?</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <!-- Tu código para confirmar la eliminación -->
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endwith %}
+
 
         <div class="form-group">
             <button type="submit" class="btn btn-secondary btn-block">Guardar</button>
@@ -358,6 +432,23 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
 <script>
+    // Preview image for firma
+    $('#item-firma').on('change', 'input[type="file"]', function() {
+        var input = $(this)[0];
+        var previewId = 'firma-preview-' + $(this).closest('tr').attr('id').split('-')[1];
+        var preview = document.getElementById(previewId);
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $(preview).attr('src', e.target.result);
+                $(preview).removeClass('d-none');
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    });
     $(document).ready(function() {
         // when user clicks add more btn of productos
       $('.add-productos').click(function(ev) {

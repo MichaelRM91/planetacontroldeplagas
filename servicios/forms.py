@@ -163,3 +163,14 @@ class FirmaFumigacionForm(forms.ModelForm):
     class Meta:
         model = firmas_servicio_fumigacion
         fields = ['imagen']
+
+ServicioLavadoTanqueFirmaFormset = inlineformset_factory(
+    ServicioLavadoTanque,
+    firmas_servicio_Lavado,
+    form=FirmaLavadoForm,
+)
+ServicioFumigacionFirmaFormset = inlineformset_factory(
+    ServicioFumigacion,
+    firmas_servicio_fumigacion,
+    form=FirmaFumigacionForm,
+)
