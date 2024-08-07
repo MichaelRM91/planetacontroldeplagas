@@ -59,8 +59,11 @@
       background-color: #8EA9DE !important;
     }
     .table {
-      font-size: 16px;
-  }
+      font-size: 11px;
+    }
+    .client-info {
+      font-size: 16px
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="{% static 'scripts/generate_pdf.js' %}"></script>
@@ -75,7 +78,7 @@
             <img src="{{ logo_url }}" alt="Logo" width="50%">
             {% endif %}
           </td>
-          <td colspan="2" style="text-align:center;">
+          <td colspan="2" {% if exclude %}class="client-info"{% endif %} style="text-align:center;">
             {{ infoEmpresas.nit }}<br>
             {{ infoEmpresas.direccion }}<br>
             Telefono: {{ infoEmpresas.telefono }} cel: {{ infoEmpresas.celular }}
@@ -83,14 +86,14 @@
         </tr>
 
         <tr>
-          <td colspan="3" style="text-align:center;">
+          <td colspan="3" style="text-align:center;" {% if exclude %}class="client-info"{% endif %}>
             <b>
               {{ infoEmpresas.concepto_radicado }}<br>
               RADICADO {{ infoEmpresas.no_radicado }} FECHA: {{ infoEmpresas.fecha_radicado }}<br>
               TRD {{ infoEmpresas.TRD_radicado }}<br>
             </b>
           </td>
-          <td  colspan="1" style="text-align:center;">
+          <td  colspan="1" style="text-align:center;" {% if exclude %}class="client-info"{% endif %}>
             <b>
               CERTIFICADO<br>
               DE CONTROL<br>
